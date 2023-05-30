@@ -14,7 +14,7 @@ import {
   fluentToolbar,
   fluentTabPanel,
   fluentDivider,
-  fluentDialog
+  fluentDialog,
 } from '@fluentui/web-components';
 
 const fluentDesigns = () => {

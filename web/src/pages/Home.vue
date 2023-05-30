@@ -5,5 +5,5 @@ export default {
 
 
 <template>
-    <h1>Hello Home</h1>
+    <h1>HelloWorld Again</h1>
 </template>

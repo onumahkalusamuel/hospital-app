@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cd web && yarn dev & air && fg
+cd web && yarn build:watch & air && fg
