@@ -13,11 +13,11 @@ func Create(c echo.Context) error {
 
 	var payment models.Payment
 	if err := c.Bind(&payment); err != nil {
-		return c.String(http.StatusBadRequest, "bad request: "+err.Error())
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request: " + err.Error()})
 	}
 
 	if payment.AmountPaid == 0 {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "please enter all required fields."})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "please enter all required fields."})
 	}
 
 	invoiceId := c.Param("invoice_id")
@@ -26,12 +26,12 @@ func Create(c echo.Context) error {
 	var invoice models.Invoice
 	invoice.ID = invoiceId
 	if err := config.DB.Model(&models.Invoice{}).First(&invoice).Error; err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "invoice not found." + err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "invoice not found." + err.Error()})
 	}
 
 	// check if amount in balance is above or equal to paid amount
 	if invoice.Balance < payment.AmountPaid {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "paid amount is above the remaining balance of " + fmt.Sprint(invoice.Balance)})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "paid amount is above the remaining balance of " + fmt.Sprint(invoice.Balance)})
 	}
 
 	// create the payment
@@ -40,7 +40,7 @@ func Create(c echo.Context) error {
 	payment.Balance = invoice.Balance - payment.AmountPaid
 
 	if err := config.DB.Create(&payment).Error; err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "error creating record: " + err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "error creating record: " + err.Error()})
 	}
 
 	// save the new balance and completion status
@@ -50,8 +50,8 @@ func Create(c echo.Context) error {
 	}
 
 	if err := config.DB.Save(&invoice).Error; err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "error updating balance: " + err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "error updating balance: " + err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "record created successfully"})
+	return c.JSON(http.StatusOK, echo.Map{"id": invoice.ID})
 }

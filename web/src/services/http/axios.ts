@@ -1,11 +1,18 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { router } from '../../router';
+import { auth } from '../../stores/auth';
 
 // axios instance
 let __api = axios.create({ baseURL: `http://${window.location.hostname}:8080/api/`, proxy: false });
 if (!window.location.hostname.match(/localhost|192.*|127.*|0.*/)) {
   __api = axios.create({ baseURL: `https://${window.location.hostname}/api/`, proxy: false });
 }
+
+// interceptor to add bearer token
+__api.interceptors.request.use((request) => {
+  if (auth.getJwt()) request.headers.Authorization = `Bearer ${auth.getJwt()}`;
+  return request;
+}, error => error);
 
 // interceptor to redirect to login or other pages
 __api.interceptors.response.use(async (response) => response, (error) => errorHandler(error));

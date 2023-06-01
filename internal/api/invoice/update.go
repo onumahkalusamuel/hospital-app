@@ -17,7 +17,7 @@ func Update(c echo.Context) error {
 	var onRecord models.Invoice
 
 	if err := c.Bind(&invoice); err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request"})
 	}
 
 	invoice.Amount = 0
@@ -38,7 +38,7 @@ func Update(c echo.Context) error {
 		}
 
 		if paymentSum > invoice.Amount {
-			return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "payment records exceed the current invoice total. Please review."})
+			return c.JSON(http.StatusBadRequest, echo.Map{"message": "payment records exceed the current invoice total. Please review."})
 		}
 	}
 
@@ -46,5 +46,5 @@ func Update(c echo.Context) error {
 
 	config.DB.Updates(invoice)
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "record updated successfully."})
+	return c.JSON(http.StatusOK, echo.Map{"message": "record updated successfully."})
 }

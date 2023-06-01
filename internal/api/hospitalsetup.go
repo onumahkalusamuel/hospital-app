@@ -29,7 +29,6 @@ func HospitalSetup(c echo.Context) error {
 
 	if checkHospital.Value != "" {
 		return c.JSON(http.StatusBadRequest, echo.Map{
-			"success": false,
 			"message": "Hospital record already setup.",
 		})
 	}
@@ -70,8 +69,5 @@ func HospitalSetup(c echo.Context) error {
 	}
 
 	// return
-	return c.JSON(http.StatusOK, echo.Map{
-		"success": true,
-		"message": "Hospital record updated successfully.",
-	})
+	return c.JSON(http.StatusOK, echo.Map{"message": "Hospital record updated successfully."})
 }

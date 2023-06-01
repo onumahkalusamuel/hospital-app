@@ -15,6 +15,8 @@ import {
   fluentTabPanel,
   fluentDivider,
   fluentDialog,
+  fluentCheckbox,
+  fluentListbox
 } from '@fluentui/web-components';
 
 const fluentDesigns = () => {
@@ -33,7 +35,9 @@ const fluentDesigns = () => {
     fluentToolbar(),
     fluentTabPanel(),
     fluentDivider(),
-    fluentDialog()
+    fluentDialog(),
+    fluentCheckbox(),
+    fluentListbox()
   );
 };
 

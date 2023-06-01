@@ -18,11 +18,11 @@ func Delete(c echo.Context) error {
 	patient.Read()
 
 	if patient.Firstname == "" {
-		return c.JSON(http.StatusNotFound, echo.Map{"success": false, "message": "account not found"})
+		return c.JSON(http.StatusNotFound, echo.Map{"message": "account not found"})
 	}
 
 	config.DB.Delete(patient)
 	// patient.Delete()
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "account deleted successfully"})
+	return c.JSON(http.StatusOK, echo.Map{"message": "account deleted successfully"})
 }

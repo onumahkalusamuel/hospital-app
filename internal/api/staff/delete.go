@@ -18,10 +18,10 @@ func Delete(c echo.Context) error {
 	staff.Read()
 
 	if staff.Firstname == "" {
-		return c.JSON(http.StatusNotFound, echo.Map{"success": false, "message": "account not found"})
+		return c.JSON(http.StatusNotFound, echo.Map{"message": "account not found"})
 	}
 
 	staff.Delete()
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "account deleted successfully"})
+	return c.JSON(http.StatusOK, echo.Map{"message": "account deleted successfully"})
 }

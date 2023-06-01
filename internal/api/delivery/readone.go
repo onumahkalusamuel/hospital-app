@@ -12,8 +12,8 @@ func ReadOne(c echo.Context) error {
 	delivery.ID = c.Param("id")
 	delivery.Read()
 	if delivery.PatientID == "" {
-		return c.JSON(http.StatusNotFound, echo.Map{"success": false, "message": "record not found"})
+		return c.JSON(http.StatusNotFound, echo.Map{"message": "record not found"})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "data": delivery})
+	return c.JSON(http.StatusOK, delivery)
 }

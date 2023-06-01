@@ -10,5 +10,5 @@ import (
 func ReadAll(c echo.Context) error {
 	d := &models.Staff{}
 	_, staffs := d.ReadAll()
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "data": staffs})
+	return c.JSON(http.StatusOK, staffs)
 }

@@ -12,9 +12,9 @@ func ReadOne(c echo.Context) error {
 	staff.ID = c.Param("id")
 	staff.Read()
 	if staff.Firstname == "" {
-		return c.JSON(http.StatusNotFound, echo.Map{"success": false, "message": "Staff record not found"})
+		return c.JSON(http.StatusNotFound, echo.Map{"message": "Staff record not found"})
 	}
 
 	staff.Password = ""
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "data": staff})
+	return c.JSON(http.StatusOK, staff)
 }

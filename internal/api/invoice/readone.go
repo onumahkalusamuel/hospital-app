@@ -14,8 +14,8 @@ func ReadOne(c echo.Context) error {
 	config.DB.Model(&models.Invoice{}).Preload("Payments").Preload("Patient").First(&invoice)
 
 	if invoice.PatientID == "" {
-		return c.JSON(http.StatusNotFound, echo.Map{"success": false, "message": "record not found"})
+		return c.JSON(http.StatusNotFound, echo.Map{"message": "record not found"})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "data": invoice})
+	return c.JSON(http.StatusOK, invoice)
 }

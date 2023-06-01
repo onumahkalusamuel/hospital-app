@@ -14,8 +14,8 @@ func PatientInvoice(c echo.Context) error {
 	config.DB.Model(&models.Patient{}).Preload("Invoices").First(&patient)
 
 	if patient.CardNo == "" {
-		return c.JSON(http.StatusNotFound, echo.Map{"success": true, "message": "record not found"})
+		return c.JSON(http.StatusNotFound, echo.Map{"message": "record not found"})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "data": patient})
+	return c.JSON(http.StatusOK, patient)
 }

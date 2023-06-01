@@ -16,12 +16,12 @@ func Update(c echo.Context) error {
 	var patient models.Patient
 
 	if err := c.Bind(&patient); err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request"})
 	}
 
 	patient.ID = c.Param("id")
 
 	config.DB.Updates(patient)
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "record updated successfully."})
+	return c.JSON(http.StatusOK, echo.Map{"message": "record updated successfully."})
 }

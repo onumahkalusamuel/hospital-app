@@ -27,5 +27,5 @@ func ReadAll(c echo.Context) error {
 
 	db.Preload("Patient").Find(&invoices)
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "data": invoices})
+	return c.JSON(http.StatusOK, invoices)
 }

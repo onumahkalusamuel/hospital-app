@@ -19,7 +19,7 @@ func UpdatePassword(c echo.Context) error {
 	var req UpdatePasswordRequest
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "bad request: " + err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request: " + err.Error()})
 	}
 
 	staff := &models.Staff{}
@@ -27,19 +27,19 @@ func UpdatePassword(c echo.Context) error {
 	staff.Read()
 
 	if err := staff.Read(); err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "bad request: " + err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request: " + err.Error()})
 	}
 
 	if req.OldPassword == "" || req.NewPassword == "" {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "enter old and new password."})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "enter old and new password."})
 	}
 
 	if pkg.CheckPassword(staff.Password, req.OldPassword) == false {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "wrong old password provided."})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "wrong old password provided."})
 	}
 
 	staff.Password = pkg.HashPassword(req.NewPassword)
 	config.DB.Model(&models.Staff{}).Updates(staff)
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "password changed successfully."})
+	return c.JSON(http.StatusOK, echo.Map{"message": "password changed successfully."})
 }

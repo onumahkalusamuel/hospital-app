@@ -12,11 +12,11 @@ func PatientNextOfKin(c echo.Context) error {
 
 	var nextofkin models.NextOfKin
 	if err := c.Bind(&nextofkin); err != nil {
-		return c.String(http.StatusBadRequest, "bad request: "+err.Error())
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request " + err.Error()})
 	}
 
 	if nextofkin.Firstname == "" || nextofkin.Relationship == "" {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "please enter all required fields."})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "please enter all required fields."})
 	}
 
 	patientId := c.Param("patient_id")
@@ -24,7 +24,7 @@ func PatientNextOfKin(c echo.Context) error {
 	var patient models.Patient
 	patient.ID = patientId
 	if err := config.DB.Model(&models.Patient{}).Preload("NextOfKin").First(&patient).Error; err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "patient not found." + err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "patient not found." + err.Error()})
 	}
 
 	if patient.NextOfKin != nil && patient.NextOfKin.ID != "" {
@@ -35,8 +35,8 @@ func PatientNextOfKin(c echo.Context) error {
 	nextofkin.PatientID = patientId
 
 	if err := config.DB.Save(&nextofkin).Error; err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "error creating record: " + err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "error creating record: " + err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "next of kin updated successfully"})
+	return c.JSON(http.StatusOK, echo.Map{"message": "next of kin updated successfully"})
 }

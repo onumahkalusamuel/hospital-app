@@ -27,7 +27,7 @@ type LoginRequest struct {
 func Login(c echo.Context) error {
 	var loginRequest LoginRequest
 	if err := c.Bind(&loginRequest); err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request"})
 	}
 
 	staff := models.Staff{

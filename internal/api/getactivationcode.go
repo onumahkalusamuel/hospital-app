@@ -17,13 +17,12 @@ func GetActivationCode(c echo.Context) error {
 	var activationRequest ActivationRequest
 	err := c.Bind(&activationRequest)
 	if err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request"})
 	}
 
 	if len(activationRequest.InstallationCode) < 10 {
 		return c.JSON(http.StatusOK, echo.Map{
 			"code":    3,
-			"success": false,
 			"message": "Invalid installation code",
 		})
 	}
@@ -31,7 +30,6 @@ func GetActivationCode(c echo.Context) error {
 	activationCode := pkg.GenActivationCode(activationRequest.InstallationCode)
 
 	return c.JSON(http.StatusOK, echo.Map{
-		"success":         true,
 		"activation_code": activationCode,
 	})
 }

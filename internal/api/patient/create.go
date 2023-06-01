@@ -13,11 +13,11 @@ func Create(c echo.Context) error {
 
 	var patient models.Patient
 	if err := c.Bind(&patient); err != nil {
-		return c.String(http.StatusBadRequest, "bad request: "+err.Error())
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request" + err.Error()})
 	}
 
 	if patient.Firstname == "" || patient.Lastname == "" {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "please enter all required fields."})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "please enter all required fields."})
 	}
 
 	// check cardno
@@ -26,7 +26,7 @@ func Create(c echo.Context) error {
 		config.DB.Unscoped().Where("card_no='" + patient.CardNo + "'").Find(&inuse)
 
 		if len(inuse) > 0 {
-			return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": fmt.Sprintf("Card No already in use by %s %s", inuse[0].Firstname, inuse[0].Lastname)})
+			return c.JSON(http.StatusBadRequest, echo.Map{"message": fmt.Sprintf("Card No already in use by %s %s", inuse[0].Firstname, inuse[0].Lastname)})
 		}
 	}
 
@@ -35,8 +35,8 @@ func Create(c echo.Context) error {
 	patient.CurrentStatus = patient.InitialStatus
 
 	if err := config.DB.Create(&patient).Error; err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "error creating account: " + err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "error creating account: " + err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "account created successfully"})
+	return c.JSON(http.StatusOK, echo.Map{"id": patient.ID})
 }

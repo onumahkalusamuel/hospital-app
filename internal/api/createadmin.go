@@ -21,7 +21,7 @@ func CreateAdmin(c echo.Context) error {
 
 	err := c.Bind(&createAdminRequest)
 	if err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request"})
 	}
 
 	checkadmin := &models.Staff{Role: config.ADMIN_ROLE}
@@ -29,7 +29,6 @@ func CreateAdmin(c echo.Context) error {
 
 	if checkadmin.ID != "" {
 		return c.JSON(http.StatusBadRequest, echo.Map{
-			"success": false,
 			"message": "Admin user already exist.",
 		})
 	}
@@ -37,7 +36,6 @@ func CreateAdmin(c echo.Context) error {
 	if createAdminRequest.Firstname == "" || createAdminRequest.Lastname == "" || createAdminRequest.Password == "" {
 		return c.JSON(http.StatusBadRequest, echo.Map{
 			"code":    5,
-			"success": false,
 			"message": "Please provide valid details",
 		})
 	}
@@ -54,13 +52,9 @@ func CreateAdmin(c echo.Context) error {
 	if err := admin.Create(); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{
 			"code":    5,
-			"success": false,
 			"message": "Error occured: " + err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{
-		"success": true,
-		"message": "Admin created successfully.",
-	})
+	return c.JSON(http.StatusOK, echo.Map{"message": "Admin created successfully."})
 }

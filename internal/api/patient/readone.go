@@ -13,8 +13,8 @@ func ReadOne(c echo.Context) error {
 	patient.ID = c.Param("id")
 	config.DB.Model(&models.Patient{}).Preload("NextOfKin").First(&patient)
 	if patient.Firstname == "" {
-		return c.JSON(http.StatusNotFound, echo.Map{"success": false, "message": "account not found"})
+		return c.JSON(http.StatusNotFound, echo.Map{"message": "account not found"})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "data": patient})
+	return c.JSON(http.StatusOK, patient)
 }

@@ -1,5 +1,6 @@
 <script lang="ts" >
 import apiRequest from '../services/http/api-requests';
+import { auth } from '../stores/auth';
 
 export default {
   name: 'Login',
@@ -9,6 +10,7 @@ export default {
     hospital_logo: ""
   }),
   async mounted() {
+    auth.setJwt('');
     try {
       const req = await apiRequest.get('hospital-details');
       if(req) {
@@ -16,7 +18,6 @@ export default {
         this.hospital_address = req.hospital_address  
         this.hospital_logo = req.hospital_logo
       }
-
     } catch(e) {
       console.log(e)
     }
@@ -26,7 +27,7 @@ export default {
       const formData = new FormData(this.$refs.login as HTMLFormElement)
       const login = await apiRequest.post('login', Object.fromEntries(formData.entries()));
       if(login.message) {
-        console.log(login.jwt)
+        auth.setJwt(login.jwt);
         this.$router.push({name: 'dashboard'})
       }
     }
@@ -40,7 +41,7 @@ export default {
       <div class="identity">
         <div class="name-addresss w-100">
           <div class="name">{{ hospital_name }}</div>
-          <small class="address">{{ hospital_address }}</small>
+          <div v-if="hospital_address" class="address">{{ hospital_address }}</div>
         </div>
         <div class="logo">
           <img :src="hospital_logo" alt="logo" style="max-width: 70px;">
@@ -51,7 +52,7 @@ export default {
           <p style="font-size: 20px;">Login to continue</p>
           <div >
             <fluent-text-field name="username" placeholder="Username" class="w-100 mb-2"></fluent-text-field>
-            <fluent-text-field name="password" placeholder="Password" class="w-100 mb-2"></fluent-text-field>
+            <fluent-text-field name="password" placeholder="Password" class="w-100 mb-2" type="password"></fluent-text-field>
             <fluent-button class="w-100 mb-2" type="submit" appearance="accent">Login</fluent-button>
           </div>
           <div class="text-center mt-3"><small>HCMS v1.0.0</small></div>
@@ -61,7 +62,7 @@ export default {
   </div>
 </template>
 
-<style>
+<style scoped>
 .form-container {
   padding: 30px;
   display: flex;
@@ -94,5 +95,9 @@ export default {
 
 .name {
   font-size: 22px;
+}
+.address {
+  margin-top:5px;
+  font-size: 14px;
 }
 </style>

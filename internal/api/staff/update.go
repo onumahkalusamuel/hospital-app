@@ -27,7 +27,7 @@ func Update(c echo.Context) error {
 	var req UpdateStaffRequest
 
 	if err := c.Bind(&req); err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request"})
 	}
 
 	staff := &models.Staff{}
@@ -35,7 +35,7 @@ func Update(c echo.Context) error {
 	staff.Read()
 
 	if err := staff.Read(); err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request: " + err.Error()})
 	}
 
 	if req.Firstname != staff.Firstname {
@@ -58,5 +58,5 @@ func Update(c echo.Context) error {
 		staff.UpdateSingle("password", pkg.HashPassword(req.Password))
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "record updated successfully."})
+	return c.JSON(http.StatusOK, echo.Map{"message": "record updated successfully."})
 }

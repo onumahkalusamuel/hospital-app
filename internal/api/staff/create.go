@@ -27,11 +27,11 @@ func Create(c echo.Context) error {
 
 	var req CreateStaffRequest
 	if err := c.Bind(&req); err != nil {
-		return c.String(http.StatusBadRequest, "bad request: "+err.Error())
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request" + err.Error()})
 	}
 
 	if req.Firstname == "" || req.Lastname == "" || req.Username == "" || req.Password == "" {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "please enter all required fields."})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "please enter all required fields."})
 	}
 
 	// check username
@@ -39,7 +39,7 @@ func Create(c echo.Context) error {
 	config.DB.Unscoped().Where("username='" + req.Username + "'").Find(&inuse)
 
 	if len(inuse) > 0 {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "username already in use"})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "username already in use"})
 	}
 
 	staff := &models.Staff{
@@ -52,8 +52,8 @@ func Create(c echo.Context) error {
 	}
 
 	if err := staff.Create(); err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"success": false, "message": "error creating account: " + err.Error()})
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "error creating account: " + err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "account created successfully"})
+	return c.JSON(http.StatusOK, echo.Map{"id": staff.ID})
 }

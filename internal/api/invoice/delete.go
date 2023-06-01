@@ -18,10 +18,10 @@ func Delete(c echo.Context) error {
 	config.DB.Model(&models.Invoice{}).Preload("Payments").First(&invoice)
 
 	if invoice.PatientID == "" {
-		return c.JSON(http.StatusNotFound, echo.Map{"success": false, "message": "record not found"})
+		return c.JSON(http.StatusNotFound, echo.Map{"message": "record not found"})
 	}
 
 	config.DB.Delete(invoice)
 
-	return c.JSON(http.StatusOK, echo.Map{"success": true, "message": "record deleted successfully"})
+	return c.JSON(http.StatusOK, echo.Map{"message": "record deleted successfully"})
 }
