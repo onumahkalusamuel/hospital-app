@@ -1,38 +1,42 @@
-<script lang="ts" >
+<script lang="ts" setup>
+import { useRouter } from 'vue-router';
 import apiRequest from '../services/http/api-requests';
+import { onMounted, ref } from 'vue';
+import TextField from '../components/form/TextField.vue';
+import PrimaryButton from '../components/form/PrimaryButton.vue';
 
-export default {
-  name: 'CreatAdmin',
-  async mounted() {
-    try {
-      const req = await apiRequest.get('hospital-details');
-      if(req) { this.$router.push({name: 'login'})}
+const router = useRouter();
+const createadmin = ref(null);
 
-    } catch(e) {
-      console.log(e)
-    }
-  },
-  methods: {
-    async createAdmin() {
-      const formData = new FormData(this.$refs.createadmin as HTMLFormElement)
-      const createAdmin = await apiRequest.post('create-admin', Object.fromEntries(formData.entries()));
-      if(createAdmin.message) {
-        alert(createAdmin.message)
-        this.$router.push({name: 'hospital-setup'})
-      }
-    }
+onMounted(async() => {
+  try {
+    const req = await apiRequest.get('hospital-details');
+    if(req) { router.push({name: 'login'})}
+
+  } catch(e) {
+    console.log(e)
   }
-}; </script>;
+});
+
+const createAdmin = async () => {
+  const formData = new FormData(createadmin.value as never as HTMLFormElement)
+  const createAdmin = await apiRequest.post('create-admin', Object.fromEntries(formData.entries()));
+  if(createAdmin.message) {
+    alert(createAdmin.message)
+    router.push({name: 'hospital-setup'})
+  }
+}
+</script>;
 
 <template>
-    <p class="" style="font-size: 1.2rem;">Create Super Admin</p>
+    <p class="text-xl">Create Super Admin</p>
     <form method="post" v-on:submit.prevent="createAdmin" ref="createadmin">
       <div>
-        <fluent-text-field name="firstname" placeholder="First Name" class="w-100 mb-2"></fluent-text-field>
-        <fluent-text-field name="lastname" placeholder="Last Name" class="w-100 mb-2"></fluent-text-field>
-        <fluent-text-field name="username" placeholder="Username" class="w-100 mb-2"></fluent-text-field>
-        <fluent-text-field name="password" placeholder="Password" class="w-100 mb-2"></fluent-text-field>
-        <fluent-button class="w-100 mb-2" type="submit" appearance="accent">Create Super Admin</fluent-button>
+        <TextField name="firstname" placeholder="First Name" class="w-full mb-2" />
+        <TextField name="lastname" placeholder="Last Name" class="w-full mb-2"/>
+        <TextField name="username" placeholder="Username" class="w-full mb-2"/>
+        <TextField name="password" placeholder="Password" class="w-full mb-2"/>
+        <PrimaryButton class="w-full mb-2" type="submit">Create Super Admin</PrimaryButton>
       </div>
     </form>
     <small>The super admin is the first user on the app. The account will have access to every section of the app.</small>

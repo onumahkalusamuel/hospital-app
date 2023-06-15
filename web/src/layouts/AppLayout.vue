@@ -1,116 +1,88 @@
-<script lang="ts" >
-import { RouterView } from 'vue-router';
+<script lang="ts">
+import { RouterView, RouterLink } from 'vue-router';
 import apiRequest from '../services/http/api-requests';
+import { user } from '../stores/user';
+import { hospital } from '../stores/hospital';
+import TextField from '../components/form/TextField.vue';
+import {
+  MagnifyingGlassIcon,
+  Bars4Icon,
+  BellAlertIcon,
+  Cog8ToothIcon,
+} from '@heroicons/vue/24/outline';
+
+
 export default {
-  name: 'AppLayout',
-  data: () => ({
-    hospital_name: "",
-    hospital_address: "",
-    hospital_logo: ""
-  }),
+    name: "AppLayout",
+    methods: {},
+    setup() {
+        return {
+            user,
+            hospital
+        };
+    },
     async mounted() {
-    // check installation first
-    try {
-      const req = await apiRequest.get('hospital-details');
-      if(req) {
-        this.hospital_name = req.hospital_name
-        this.hospital_address = req.hospital_address  
-        this.hospital_logo = req.hospital_logo
-      }
-    } catch(e) {
-      console.log(e)
-    }
-  }
+        try {
+            // get hospital
+            const req = await apiRequest.get("hospital-details");
+            if (req)
+                hospital.setAll(req);
+            // get user
+            const profile = await apiRequest.get("profile");
+            if (profile)
+                user.setAll(profile);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    },
+    components: { TextField, MagnifyingGlassIcon, Bars4Icon, BellAlertIcon, Cog8ToothIcon, RouterLink }
 }; </script>;
 
 <template>
-  <div class="app">
-    <header class="w-100 toolbar">
-      <a class="header-icon-link w-48">
-        <img class="white-svg" src="/icons/waffle.svg" alt="menu"/>
+  <div class="flex flex-col h-screen">
+    <header class="w-full flex toolbar bg-[#0078d4] h-[40px]">
+      <a class="header-icon-link w-[48px] hover:bg-[#1664a7]">
+        <bars4-icon class="text-white h-6 w-6" />
       </a>
-      <a class="header-icon-link site-title">
-        {{ hospital_name }}
-      </a>   
-      <div class="search-container">
-        <fluent-text-field class="w-100" placeholder="Search" style="max-width:800px; opacity: 0.8;" dense>
-          <i slot="start" class="flex">
-            <img src="/icons/search.svg" alt="menu"/>
-          </i>
-        </fluent-text-field>
+      <router-link class="header-icon-link font-bold text-[14px] px-3 hover:bg-[#1664a7]" :to="{name: 'dashboard'}">
+        {{ hospital.get('hospital_name') }}
+      </router-link>   
+      <div class="search-container flex flex-col h-full items-center">
+        <text-field name="search" class="max-w-[800px] border-none mb-none" placeholder="Search">
+          <template #prepend>
+            <magnifying-glass-icon class="h-5 w-5 text-gray-500"/>
+          </template>
+        </text-field>
       </div>
       <div style="display:flex; flex: 0 0 auto">
-        <a class="header-icon-link w-48">
-          <img class="white-svg" src="/icons/notification.svg" alt="notification"/>
+        <a class="header-icon-link w-[48px]">
+          <bell-alert-icon class="text-white h-5 w-5"/>
         </a>
-        <a class="header-icon-link w-48">
-          <img class="white-svg" src="/icons/gear.svg" alt="settings"/>
+        <a class="header-icon-link w-[48px]">
+          <cog8-tooth-icon class="text-white h-5 w-5"/>
         </a>
       </div>
-      <a class="header-icon-link">
+      <a class="header-icon-link hover:bg-[#1664a7]">
         <div class="avatarmenu-container">
-          <div class="avatarmenu-username">Onumah Kalu Samuel</div>
-          <div class="avatarmenu-userid">45f4-54d3-43ac43453cde-4435</div>
+          <div class="avatarmenu-username">{{ user.get('username') }}</div>
+          <div class="avatarmenu-userid">{{  user.get('id') }}</div>
         </div>
         <div class="avatarmenu-image-container">
           <img src="/avatar.png" alt="avatar" class="avatar"/>
         </div>
       </a>
     </header>
-    <main style="">
+    <main class="flex-1 flex-scroll">
       <router-view></router-view>
     </main>
-    <footer>
-      <a class="header-icon-link w-48">
-        <img class="white-svg" src="/icons/waffle.svg" alt="menu"/>
-      </a>
-      <a class="header-icon-link site-title">
-        {{ hospital_name }}
-      </a>   
-      <div class="search-container">
-        <fluent-text-field class="w-100" placeholder="Search" style="max-width:800px; opacity: 0.8;" dense>
-          <i slot="start" class="flex">
-            <img src="/icons/search.svg" alt="menu"/>
-          </i>
-        </fluent-text-field>
-      </div>
-      <div style="display:flex; flex: 0 0 auto">
-        <a class="header-icon-link w-48">
-          <img class="white-svg" src="/icons/notification.svg" alt="notification"/>
-        </a>
-        <a class="header-icon-link w-48">
-          <img class="white-svg" src="/icons/gear.svg" alt="settings"/>
-        </a>
-      </div>
-      <a class="header-icon-link">
-        <div class="avatarmenu-container">
-          <div class="avatarmenu-username">Onumah Kalu Samuel</div>
-          <div class="avatarmenu-userid">45f4-54d3-43ac43453cde-4435</div>
-        </div>
-        <div class="avatarmenu-image-container">
-          <img src="/avatar.png" alt="avatar" class="avatar"/>
-        </div>
-      </a>
-    </footer>
   </div>
 </template>
 
 <style scoped>
-.app {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-main {
-  flex-grow: 1;
-  overflow:scroll;
-}
 .toolbar {
-  display: flex;
   flex: 0 0 auto;
-  height: 40px;
   box-sizing: border-box;
-  background-color: #0078d4;
 }
 .header-icon-link {
   height: 40px;
@@ -121,18 +93,9 @@ main {
   color:white;
   text-decoration: none;
   cursor:pointer;
-  /* filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%); */
 }
 .header-icon-link:hover {
   background-color: #1664a7;
-}
-.w-48 {
-  width: 48px;
-}
-.site-title {
-  padding: 0 20px;
-  font-weight: 600;
-  font-size: 14px;
 }
 .search-container {
   margin-right: 15px;
@@ -143,9 +106,7 @@ main {
   align-items: center;
   justify-content: center;
 }
-.flex {
-  display: flex;
-}
+
 .avatar {
   height: 28px;
   width: 28px;
@@ -179,16 +140,5 @@ padding-left: 20px ;text-align:right; flex:1 1 auto
   padding-left: 6px;
   padding-right: 6px;
   box-sizing: content-box;
-}
-.white-svg {
-  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
-}
-
-footer {
-  display: flex;
-  flex: 0 0 auto;
-  height: 40px;
-  box-sizing: border-box;
-  background-color: #0078d4;
 }
 </style>

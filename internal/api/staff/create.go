@@ -9,15 +9,16 @@ import (
 	"github.com/onumahkalusamuel/hospital-app/pkg"
 )
 
-type CreateStaffRequest struct {
-	Firstname  string `json:"firstname"`
-	Lastname   string `json:"lastname"`
-	Middlename string `json:"middlename"`
-	Username   string `json:"username"`
-	Password   string `json:"password"`
-	Phone      string `json:"phone"`
-	Role       uint   `json:"role"`
-}
+// type CreateStaffRequest struct {
+// 	Firstname  string `json:"firstname"`
+// 	Lastname   string `json:"lastname"`
+// 	Middlename string `json:"middlename"`
+// 	Username   string `json:"username"`
+// 	Password   string `json:"password"`
+// 	Email      string `json:"email"`
+// 	Phone      string `json:"phone"`
+// 	Role       uint   `json:"role"`
+// }
 
 func Create(c echo.Context) error {
 
@@ -25,33 +26,27 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, echo.Map{"message": "unauthorized access"})
 	}
 
-	var req CreateStaffRequest
-	if err := c.Bind(&req); err != nil {
+	var staff models.Staff
+	if err := c.Bind(&staff); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request" + err.Error()})
 	}
 
-	if req.Firstname == "" || req.Lastname == "" || req.Username == "" || req.Password == "" {
+	if staff.Firstname == "" || staff.Lastname == "" || staff.Username == "" || staff.Password == "" {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "please enter all required fields."})
 	}
 
 	// check username
 	var inuse = []models.Staff{}
-	config.DB.Unscoped().Where("username='" + req.Username + "'").Find(&inuse)
+	config.DB.Unscoped().Where("username='" + staff.Username + "'").Find(&inuse)
 
 	if len(inuse) > 0 {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "username already in use"})
 	}
 
-	staff := &models.Staff{
-		Firstname:  req.Firstname,
-		Lastname:   req.Lastname,
-		Middlename: req.Middlename,
-		Role:       req.Role,
-		Username:   req.Username,
-		Password:   pkg.HashPassword(req.Password),
-	}
+	// hash password
+	staff.Password = pkg.HashPassword(staff.Password)
 
-	if err := staff.Create(); err != nil {
+	if err := config.DB.Create(&staff).Error; err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "error creating account: " + err.Error()})
 	}
 

@@ -9,12 +9,12 @@ import (
 
 func ReadProfile(c echo.Context) error {
 	staff := &models.Staff{}
-	staff.ID = c.Get("id").(string)
+	staff.ID = c.Get("ID").(string)
 	staff.Read()
 	if staff.Firstname == "" {
 		return c.JSON(http.StatusNotFound, echo.Map{"message": "record not found"})
 	}
 
-	staff.Password = ""
+	// staff.Password = ""
 	return c.JSON(http.StatusOK, staff)
 }

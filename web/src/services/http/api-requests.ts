@@ -32,7 +32,8 @@ const postMulti = async (url: string, form: object) => {
     .catch(e => handleError(e));
 };
 
-const deleteRecord = async (url: string) => {
+const deleteRecord = async (url: string, silent?: boolean) => {
+  if(!silent && !confirm('Are you sure you want to delete this record?')) return;
   return await __api.delete(url)
     .then(response => { return response?.data; })
     .catch(e => { return handleError(e); });

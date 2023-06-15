@@ -1,20 +1,29 @@
 <script setup lang="ts">
 defineProps<{
   iconSrc?: string,
-  label: string
+  disabled?: boolean,
+  outline?: boolean
 }>()
 </script>
 <template>
   <div style="display:inline-block">
-    <div class="action-button-container">
+    <div :class="(disabled?' disabled ':' ') + (outline ? ' outline ':' ')" class='action-button-container'>
       <div class="action-button-icon" v-if="iconSrc">
         <img :src="iconSrc" alt="" class="action-button-icon-img"/>
       </div>
-      <div class="action-button-label">{{ label }}</div>
+      <div class="action-button-label"><slot></slot></div>
     </div>
   </div>
 </template>
 <style scoped>
+.disabled {
+  cursor: default !important;
+  opacity: 0.5;
+}
+.outline {
+  border: 1px solid #555;
+  box-sizing: border-box;
+}
 .action-button-container {
   cursor:pointer;
   display: flex;

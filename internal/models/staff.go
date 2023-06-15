@@ -12,6 +12,7 @@ type Staff struct {
 	Middlename string         `gorm:"default:null" json:"middlename"`
 	Lastname   string         `gorm:"not null" json:"lastname"`
 	Phone      string         `gorm:"default:null" json:"phone"`
+	Sex        string         `gorm:"default:null" json:"sex"`
 	Email      string         `gorm:"default:null" json:"email"`
 	Role       uint           `gorm:"default:3" json:"role"`
 	Username   string         `gorm:"not null;unique" json:"username"`

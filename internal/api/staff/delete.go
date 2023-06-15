@@ -17,6 +17,10 @@ func Delete(c echo.Context) error {
 	staff.ID = c.Param("id")
 	staff.Read()
 
+	if staff.Role == config.ADMIN_ROLE {
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "Cannot delete the Super Admin"})
+	}
+
 	if staff.Firstname == "" {
 		return c.JSON(http.StatusNotFound, echo.Map{"message": "account not found"})
 	}

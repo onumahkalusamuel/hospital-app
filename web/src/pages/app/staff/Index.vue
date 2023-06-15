@@ -3,39 +3,40 @@ import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumbs.vue
 import ActionButton from '../../../components/ActionButton.vue';
 import PageHeader from '../../../components/PageHeader.vue';
 import apiRequest from '../../../services/http/api-requests';
-import { Patient } from '../../../interfaces'
+import { Staff, Roles } from '../../../interfaces'
 import TextField from '../../../components/form/TextField.vue';
 import { UsersIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref } from 'vue';
+import dayjs from 'dayjs';
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
-  { title: "Patients", current: true },
+  { title: "Staff", current: true },
 ] as BreadcrumbItem[]);
 
-const patients= ref([] as Patient[]);
+const staff = ref([] as Staff[]);
 
 const deletItem = async (id: string)  => {
-  const del = await apiRequest.deleteRecord(`patients/${id}`);
+  const del = await apiRequest.deleteRecord(`staff/${id}`);
   if(del && del.message) alert(del.message);
-  fetchPatients();
+  fetchStaff();
 }
 
-const fetchPatients =async () => {
-  patients.value = await apiRequest.get('patients');  
+const fetchStaff =async () => {
+  staff.value = await apiRequest.get('staff');  
 }
 
-onMounted(async() => {fetchPatients()})
+onMounted(async() => {fetchStaff()})
 </script>;
 
 <template>
   <div class="page-wrapper">
     <Breadcrumbs :items="breadcrumbs"></Breadcrumbs>
-    <PageHeader title="Patients" subtitle="Manage patients" :icon-src="UsersIcon">
+    <PageHeader title="Staff" subtitle="Manage staff" :icon-src="UsersIcon">
     </PageHeader>
     <div style="padding: 0 15px; display: flex; justify-content: space-between; border-top:1px solid #333">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'add-patient'})" icon-src="/icons/plus.svg">Add patient</ActionButton>
+        <ActionButton v-on:click="() => $router.push({name: 'add-staff'})" icon-src="/icons/plus.svg">Add staff</ActionButton>
       </div>
       <div>
         <TextField name="" placeholder="Search">
@@ -48,7 +49,7 @@ onMounted(async() => {fetchPatients()})
 
     <hr class="ml-4 mr-4" />
     <div class="page-scroll-area">
-      <div v-if="!patients.length">
+      <div v-if="!staff.length">
         <div class="text-center mt-4 mb-4 pt-4">No records found</div>
         <hr/>
       </div>
@@ -56,26 +57,24 @@ onMounted(async() => {fetchPatients()})
         <div class="table-row table-header">
           <div class="cell-data cell-sn">S/N</div>
           <div class="cell-data cell-size-1">Name</div>
-          <div class="cell-data">Card No</div>
-          <div class="cell-data">Sex</div>
-          <div class="cell-data">Phone</div>
-          <div class="cell-data cell-size-1">Current Appnt.</div>
+          <div class="cell-data">Role</div>
+          <div class="cell-data">Username</div>
+          <div class="cell-data cell-size-1">Created At</div>
           <div class="cell-data">Actions</div>
         </div>
         <div class="table-body">
-          <div class="table-row" v-for="patient, i in patients" :key="patient.id">
+          <div class="table-row" v-for="st, i in staff" :key="st.id">
             <div class="cell-data cell-sn">{{ i + 1 }}</div>
             <div class="cell-data cell-size-1">
-              <router-link class="text-blue-600 hover:underline" :to="{name: 'view-patient', params: { id: patient.id }}">
-                {{ `${patient.firstname} ${patient.lastname}` }}
+              <router-link class="text-blue-600 hover:underline" :to="{name: 'view-staff', params: { id: st.id }}">
+                {{ `${st.firstname} ${st.lastname}` }}
               </router-link>
             </div>
-            <div class="cell-data">{{ patient.card_no }}</div>
-            <div class="cell-data">{{ patient.sex }}</div>
-            <div class="cell-data">{{ patient.phone }}</div>
-            <div class="cell-data cell-size-1">{{ patient.current_appointment }}</div>
+            <div class="cell-data">{{ Roles[st.role] }}</div>
+            <div class="cell-data">{{ st.username }}</div>
+            <div class="cell-data cell-size-1">{{ dayjs(st.created_at).format('hh:mm a DD-MM-YYYY') }}</div>
             <div class="cell-data">
-              <ActionButton v-on:click="deletItem(patient.id)" icon-src="/icons/trash.svg">Delete</ActionButton>
+              <ActionButton v-on:click="deletItem(st.id)" icon-src="/icons/trash.svg">Delete</ActionButton>
             </div>
           </div>
         </div>

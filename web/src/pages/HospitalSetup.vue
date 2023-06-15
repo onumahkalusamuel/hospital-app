@@ -1,42 +1,44 @@
-<script lang="ts" >
+<script lang="ts" setup>
 import apiRequest from '../services/http/api-requests';
+import TextField from '../components/form/TextField.vue';
+import PrimaryButton from '../components/form/PrimaryButton.vue';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default {
-  name: 'HospitalSetup',
-  async mounted() {
-    try {
+const router = useRouter();
+const hospitalsetup = ref(null);
+const logo = ref(null);
+
+onMounted(async() => {
+  try {
       const req = await apiRequest.get('hospital-details');
-      if(req) { this.$router.push({name: 'login'})}
+      if(req) { router.push({name: 'login'})}
 
     } catch(e) {
       console.log(e)
     }
-  },
-  methods: {
-    async hospitalSetup() {
-      console.log(this.$refs.logo);
-      console.log((this.$refs.logo as HTMLInputElement).files);
-      const formData = new FormData(this.$refs.hospitalsetup as HTMLFormElement)
-      const hospitalSetup = await apiRequest.postMulti('hospital-setup', formData);
-      if(hospitalSetup?.message) {
-        alert(hospitalSetup.message)
-        this.$router.push({name: 'login'})
-      }
-    }
+})
+
+const hospitalSetup = async () => {
+  const formData = new FormData(hospitalsetup.value as never as HTMLFormElement)
+  const hospitalSetup = await apiRequest.postMulti('hospital-setup', formData);
+  if(hospitalSetup?.message) {
+    alert(hospitalSetup.message)
+    router.push({name: 'login'})
   }
-}; </script>;
+}
+</script>;
 
 <template>
-    <p class="" style="font-size: 1.2rem;">Hospital Setup</p>
-    <form v-on:submit.prevent="hospitalSetup" ref="hospitalsetup" enctype="multipart/form-data">
-      <div>
-        <fluent-text-field name="hospital_name" placeholder="Hospital Name" class="w-100 mb-2"></fluent-text-field>
-        <fluent-text-field name="hospital_address" placeholder="Physical Address" class="w-100 mb-2"></fluent-text-field>
-        <fluent-text-field name="hospital_email" placeholder="Email Address" class="w-100 mb-2"></fluent-text-field>
-        <fluent-text-field name="hospital_phone" placeholder="Phone Number" class="w-100 mb-2"></fluent-text-field>
-        <!-- <fluent-text-field name="hospital_logo" placeholder="Logo" ref="logo" class="w-100 mb-2" type="file"></fluent-text-field> -->
-        <input name="hospital_logo" placeholder="Logo" ref="logo" class="w-100 mb-2" type="file"/>
-        <fluent-button class="w-100 mb-2" type="submit" appearance="accent">Submit</fluent-button>
-      </div>
-    </form>
+  <p class="text-xl">Hospital Setup</p>
+  <form v-on:submit.prevent="hospitalSetup" ref="hospitalsetup" enctype="multipart/form-data">
+    <div>
+      <TextField name="hospital_name" placeholder="Hospital Name" class="w-full mb-2"/>
+      <TextField name="hospital_address" placeholder="Physical Address" class="w-full mb-2"/>
+      <TextField name="hospital_email" placeholder="Email Address" class="w-full mb-2"/>
+      <TextField name="hospital_phone" placeholder="Phone Number" class="w-full mb-2"/>
+      <TextField label="Hospital Logo" name="hospital_logo" class="w-full mb-2 font-xl" ref="logo" type="file"/>
+      <PrimaryButton class="w-full mb-2" type="submit">Submit</PrimaryButton>
+    </div>
+  </form>
 </template>
