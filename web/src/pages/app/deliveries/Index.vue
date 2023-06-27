@@ -8,6 +8,7 @@ import { Delivery } from '../../../interfaces';
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 import { UserGroupIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref } from 'vue';
+import { toasts } from '../../../stores/toasts';
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
@@ -18,7 +19,8 @@ const deliveries = ref([] as Delivery[]);
 
 const deletItem = async (id: string) => {
   const del = await apiRequest.deleteRecord(`deliveries/${id}`);
-  if(del && del.message) alert(del.message);
+  if(del && del.message) 
+    toasts.addToast({message: del.message, type: 'success'});
   fetch();
 }
 const fetch = async() => {
@@ -34,7 +36,7 @@ onMounted(async() =>{fetch()});
     <PageHeader title="Deliveries" subtitle="Manage deliveries" :icon-src="UserGroupIcon" />
     <div style="padding: 0 15px; display: flex; justify-content: space-between; border-top:1px solid #333">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'add-delivery'})" icon-src="/icons/plus.svg">Add delivery</ActionButton>
+        <ActionButton v-on:click="() => $router.push({name: 'add-delivery'})" :icon-src="UserGroupIcon">Add delivery</ActionButton>
       </div>
       <div>
         <TextField name="" placeholder="Search">
@@ -75,7 +77,7 @@ onMounted(async() =>{fetch()});
             <div class="cell-data cell-size-1">{{ delivery.condition }}</div>
             <div class="cell-data cell-size-1">{{ delivery.delivery_date_time }}</div>
             <div class="cell-data">
-              <ActionButton v-on:click="deletItem(delivery.id)" icon-src="/icons/trash.svg">Delete</ActionButton>
+              <ActionButton v-on:click="deletItem(delivery.id)" :icon-src="UserGroupIcon">Delete</ActionButton>
             </div>
           </div>
         </div>

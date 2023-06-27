@@ -5,7 +5,7 @@ defineProps<{
   required?: boolean;
   class?: string;
   options?: [string, (string|number)?][];
-  value?: string | [];
+  value?: string;
 }>()
 </script>
 <template>
@@ -18,7 +18,14 @@ defineProps<{
       <slot name="prepend"></slot>
     </div>
     <select class="h-[28px] w-full rounded py-1 px-2 bg-white hover:bg-gray-100 focus:outline-none" :name="name" :required="required" :autocomplete="`new-${name}`" :id="name">
-      <option v-for="opt,i in options" :key="i" :value="opt[1] || opt[0]">{{ opt[0] }}</option>
+      <option 
+        v-for="opt,i in options" 
+        :key="i" 
+        :value="opt[1] || opt[0]"
+        :selected="value==(opt[1] || opt[0])"
+      >
+        {{ opt[0] }}
+      </option>
     </select>
     <div v-if="$slots.append" class="px-2 flex items-center justify-center hover:bg-gray-100 rounded">
       <slot name="append"></slot>

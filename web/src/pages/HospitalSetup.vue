@@ -4,6 +4,7 @@ import TextField from '../components/form/TextField.vue';
 import PrimaryButton from '../components/form/PrimaryButton.vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { toasts } from '../stores/toasts';
 
 const router = useRouter();
 const hospitalsetup = ref(null);
@@ -23,7 +24,7 @@ const hospitalSetup = async () => {
   const formData = new FormData(hospitalsetup.value as never as HTMLFormElement)
   const hospitalSetup = await apiRequest.postMulti('hospital-setup', formData);
   if(hospitalSetup?.message) {
-    alert(hospitalSetup.message)
+    toasts.addToast({message: hospitalSetup.message, type: 'success'});
     router.push({name: 'login'})
   }
 }

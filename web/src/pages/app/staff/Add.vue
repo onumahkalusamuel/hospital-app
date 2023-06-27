@@ -10,10 +10,11 @@ import { ref } from 'vue';
 import { router } from '../../../router';
 import { UserPlusIcon } from '@heroicons/vue/24/outline';
 import { Staff } from '../../../interfaces';
+import { toasts } from '../../../stores/toasts';
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
-  { title: "Dtaff",  link: { name: "staff" } },
+  { title: "Staff",  link: { name: "staff" } },
   { title: "Add staff", current: true },
 ] as BreadcrumbItem[]);
 
@@ -25,7 +26,7 @@ const create = async () => {
   formData.role *= 1;
   const create = await apiRequest.post('staff', formData);
   if(create.id) {
-    alert("account created successfully.")
+    toasts.addToast({message: "account created successfully.", type: 'success'});
     router.push({ name: 'view-staff', params: { id: create.id } })
   }
 }
@@ -38,7 +39,7 @@ const create = async () => {
     <hr class="ml-4 mr-4" />
     <div class="page-scroll-area">
       <form method="POST" v-on:submit.prevent="create" class="form flex flex-wrap gap-3 pl-4" ref="createForm">
-        <div class="min-w-[250px]"><SelectField label="Role" name="role" :options="[['Doctor', 2], ['Nurse', 3]]" required/></div>
+        <div class="min-w-[250px]"><SelectField label="Role" name="role" :options="[['Nurse', 3],['Doctor', 2]]" required/></div>
         <div class="min-w-[250px]"><TextField label="First Name" placeholder="John" name="firstname" required></TextField></div>
         <div class="min-w-[250px]"><TextField label="Middle Name" placeholder="M." name="middlename"></TextField></div>
         <div class="min-w-[250px]"><TextField label="Last Name" placeholder="Doe" name="lastname" required></TextField></div>

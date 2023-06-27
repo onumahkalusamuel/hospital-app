@@ -3,6 +3,7 @@ import PrimaryButton from '../components/form/PrimaryButton.vue';
 import TextField from '../components/form/TextField.vue';
 import apiRequest from '../services/http/api-requests';
 import { auth } from '../stores/auth';
+import { toasts } from '../stores/toasts';
 
 export default {
     name: "Login",
@@ -31,6 +32,7 @@ export default {
             const login = await apiRequest.post("login", Object.fromEntries(formData.entries()));
             if (login.message) {
                 auth.setJwt(login.jwt);
+                toasts.addToast({ message: 'Login successful', title: 'Success', type: 'success' })
                 this.$router.push({ name: "dashboard" });
             }
         }

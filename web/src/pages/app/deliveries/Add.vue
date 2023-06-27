@@ -11,6 +11,7 @@ import { onMounted, ref } from 'vue';
 import { router } from '../../../router';
 import { PlusCircleIcon } from '@heroicons/vue/24/outline';
 import { Patient } from '../../../interfaces';
+import { toasts } from '../../../stores/toasts';
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
@@ -27,12 +28,11 @@ const create = async() => {
     formData.delivery_date_time = dayjs(formData.delivery_date_time as string).format('YYYY-MM-DDTHH:mm:ss[Z]');
   }
   
-  // (formData.baby_weight as any) *= 1000;
   (formData.baby_weight as any) = Math.ceil(formData.baby_weight as any * 1000)
 
   const create = await apiRequest.post('deliveries', formData);
   if(create?.id) {
-    alert("record created successfully.")
+    toasts.addToast({message: "record created successfully.", type: 'success'});
     router.push({ name: 'view-delivery', params: { id: create.id } })
   }
 }

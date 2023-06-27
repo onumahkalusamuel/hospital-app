@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import TextField from '../components/form/TextField.vue';
 import { DocumentDuplicateIcon } from '@heroicons/vue/24/solid'
 import PrimaryButton from '../components/form/PrimaryButton.vue';
+import { toasts } from '../stores/toasts';
 
 const installation_code = ref('');
 const router = useRouter();
@@ -33,14 +34,14 @@ onMounted(async() => {
 
 const copyInstallationCode = async () => {
   await navigator.clipboard.writeText(installation_code.value as string);
-  alert('copied');
+  toasts.addToast({message: 'Installation code copied to clipboard.', type: 'success'});
 }
 
 const activate = async () => {
   const formData = new FormData(form.value as never as HTMLFormElement)
   const activate = await apiRequest.post('activate', Object.fromEntries(formData.entries()));
   if(activate.message) {
-    alert(activate.message)
+    toasts.addToast({message: activate.message, type: 'success'});
     router.push({name: 'create-admin'})
   }
 }

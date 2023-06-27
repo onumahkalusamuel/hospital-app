@@ -9,16 +9,17 @@ import (
 	"github.com/onumahkalusamuel/hospital-app/pkg"
 )
 
-// type CreateStaffRequest struct {
-// 	Firstname  string `json:"firstname"`
-// 	Lastname   string `json:"lastname"`
-// 	Middlename string `json:"middlename"`
-// 	Username   string `json:"username"`
-// 	Password   string `json:"password"`
-// 	Email      string `json:"email"`
-// 	Phone      string `json:"phone"`
-// 	Role       uint   `json:"role"`
-// }
+type CreateStaffRequest struct {
+	Firstname  string `json:"firstname"`
+	Lastname   string `json:"lastname"`
+	Middlename string `json:"middlename"`
+	Username   string `json:"username"`
+	Password   string `json:"password"`
+	Email      string `json:"email"`
+	Phone      string `json:"phone"`
+	Role       uint   `json:"role"`
+	Sex        string `json:"sex"`
+}
 
 func Create(c echo.Context) error {
 
@@ -26,7 +27,7 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, echo.Map{"message": "unauthorized access"})
 	}
 
-	var staff models.Staff
+	var staff CreateStaffRequest
 	if err := c.Bind(&staff); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request" + err.Error()})
 	}
@@ -46,9 +47,21 @@ func Create(c echo.Context) error {
 	// hash password
 	staff.Password = pkg.HashPassword(staff.Password)
 
-	if err := config.DB.Create(&staff).Error; err != nil {
+	newstaff := models.Staff{
+		Firstname:  staff.Firstname,
+		Middlename: staff.Middlename,
+		Lastname:   staff.Lastname,
+		Username:   staff.Username,
+		Email:      staff.Email,
+		Phone:      staff.Phone,
+		Password:   staff.Password,
+		Role:       staff.Role,
+		Sex:        staff.Sex,
+	}
+
+	if err := config.DB.Create(&newstaff).Error; err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "error creating account: " + err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"id": staff.ID})
+	return c.JSON(http.StatusOK, echo.Map{"id": newstaff.ID})
 }

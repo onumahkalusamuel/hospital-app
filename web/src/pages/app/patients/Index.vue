@@ -7,6 +7,7 @@ import { Patient } from '../../../interfaces'
 import TextField from '../../../components/form/TextField.vue';
 import { UsersIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref } from 'vue';
+import { toasts } from '../../../stores/toasts';
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
@@ -17,7 +18,7 @@ const patients= ref([] as Patient[]);
 
 const deletItem = async (id: string)  => {
   const del = await apiRequest.deleteRecord(`patients/${id}`);
-  if(del && del.message) alert(del.message);
+  if(del && del.message) toasts.addToast({message: del.message, type: 'success'});
   fetchPatients();
 }
 
@@ -35,7 +36,7 @@ onMounted(async() => {fetchPatients()})
     </PageHeader>
     <div style="padding: 0 15px; display: flex; justify-content: space-between; border-top:1px solid #333">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'add-patient'})" icon-src="/icons/plus.svg">Add patient</ActionButton>
+        <ActionButton v-on:click="() => $router.push({name: 'add-patient'})" :icon-src="UsersIcon">Add patient</ActionButton>
       </div>
       <div>
         <TextField name="" placeholder="Search">
@@ -75,7 +76,7 @@ onMounted(async() => {fetchPatients()})
             <div class="cell-data">{{ patient.phone }}</div>
             <div class="cell-data cell-size-1">{{ patient.current_appointment }}</div>
             <div class="cell-data">
-              <ActionButton v-on:click="deletItem(patient.id)" icon-src="/icons/trash.svg">Delete</ActionButton>
+              <ActionButton v-on:click="deletItem(patient.id)" :icon-src="UsersIcon">Delete</ActionButton>
             </div>
           </div>
         </div>

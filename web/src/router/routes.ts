@@ -15,6 +15,9 @@ import Patients from '../pages/app/patients/Index.vue';
 import AddPatient from '../pages/app/patients/Add.vue';
 import ViewPatient from '../pages/app/patients/View.vue';
 import NextOfKin from '../pages/app/patients/NextOfKin.vue';
+import PatientHistory from '../pages/app/patients/HistoryIndex.vue';
+import PatientHistoryAdd from '../pages/app/patients/HistoryAdd.vue';
+import PatientHistoryView from '../pages/app/patients/HistoryView.vue';
 
 import Deliveries from '../pages/app/deliveries/Index.vue';
 import AddDelivery from '../pages/app/deliveries/Add.vue';
@@ -42,6 +45,9 @@ export const routes: RouteRecordRaw[] = [
       { path: 'patients/add', component: AddPatient, name: 'add-patient' },
       { path: 'patients/:id', component: ViewPatient, name: 'view-patient' },
       { path: 'patients/:id/next-of-kin', component: NextOfKin, name: 'next-of-kin' },
+      { path: 'patients/:id/patient-history', component: PatientHistory, name: 'patient-history' },
+      { path: 'patients/:id/patient-history/add', component: PatientHistoryAdd, name: 'patient-history-add' },
+      { path: 'patients/:id/patient-history/:hid', component: PatientHistoryView, name: 'patient-history-view' },
 
       { path: 'deliveries', component: Deliveries, name: 'deliveries' },
       { path: 'deliveries/add', component: AddDelivery, name: 'add-delivery' },

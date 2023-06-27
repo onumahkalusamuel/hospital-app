@@ -5,9 +5,10 @@ import PageHeader from '../../../components/PageHeader.vue';
 import apiRequest from '../../../services/http/api-requests';
 import { Staff, Roles } from '../../../interfaces'
 import TextField from '../../../components/form/TextField.vue';
-import { UsersIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
+import { UsersIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref } from 'vue';
 import dayjs from 'dayjs';
+import { toasts } from '../../../stores/toasts';
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
@@ -18,7 +19,7 @@ const staff = ref([] as Staff[]);
 
 const deletItem = async (id: string)  => {
   const del = await apiRequest.deleteRecord(`staff/${id}`);
-  if(del && del.message) alert(del.message);
+  if(del && del.message) toasts.addToast({message: del.message, type: 'success'});
   fetchStaff();
 }
 
@@ -36,7 +37,7 @@ onMounted(async() => {fetchStaff()})
     </PageHeader>
     <div style="padding: 0 15px; display: flex; justify-content: space-between; border-top:1px solid #333">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'add-staff'})" icon-src="/icons/plus.svg">Add staff</ActionButton>
+        <ActionButton v-on:click="() => $router.push({name: 'add-staff'})" :icon-src="TrashIcon">Add staff</ActionButton>
       </div>
       <div>
         <TextField name="" placeholder="Search">
@@ -72,9 +73,9 @@ onMounted(async() => {fetchStaff()})
             </div>
             <div class="cell-data">{{ Roles[st.role] }}</div>
             <div class="cell-data">{{ st.username }}</div>
-            <div class="cell-data cell-size-1">{{ dayjs(st.created_at).format('hh:mm a DD-MM-YYYY') }}</div>
+            <div class="cell-data cell-size-1">{{ dayjs(st.created_at).format('DD-MM-YYYY hh:mm A') }}</div>
             <div class="cell-data">
-              <ActionButton v-on:click="deletItem(st.id)" icon-src="/icons/trash.svg">Delete</ActionButton>
+              <ActionButton v-if="st.role > 1" v-on:click="deletItem(st.id)" :icon-src="TrashIcon">Delete</ActionButton>
             </div>
           </div>
         </div>

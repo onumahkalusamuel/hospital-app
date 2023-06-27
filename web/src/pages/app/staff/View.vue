@@ -11,6 +11,7 @@ import SecondaryButton from '../../../components/form/SecondaryButton.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import {UserIcon} from '@heroicons/vue/24/solid'
+import { toasts } from '../../../stores/toasts';
 
 const route = useRoute();
 const router = useRouter();
@@ -23,21 +24,21 @@ const breadcrumbs = ref([
 const staff = ref({} as Staff);
 const form = ref(null);
 
-const fetchPatient = async () => {
+const fetchStaff = async () => {
   staff.value = await apiRequest.get(`staff/${route.params.id}`);
   
   breadcrumbs.value.push({ title: `${staff.value.lastname} ${staff.value.firstname}`, current: true });
 }
 const update = async () => {
   const formData = Object.fromEntries(new FormData(form as never as HTMLFormElement).entries())
-  const create = await apiRequest.post('patients', formData);
+  const create = await apiRequest.post('staff', formData);
   if(create.id) {
-    alert("account created successfully.")
-    router.push({ name: 'view-patient', params: { id: create.id } })
+    toasts.addToast({message: "account created successfully.", type: 'success'});
+    router.push({ name: 'view-staff', params: { id: create.id } })
   }
 }
 
-onMounted(async() => { await fetchPatient()});
+onMounted(async() => { await fetchStaff()});
 
 </script>;
 
@@ -47,8 +48,8 @@ onMounted(async() => { await fetchPatient()});
     <PageHeader :title="`${staff.lastname} ${staff.firstname}`" :icon-src="UserIcon"></PageHeader>
     <div style="padding: 0 15px; display: flex; justify-content: space-between; border-bottom:1px solid #333">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'add-patient'})" icon-src="/icons/basket.svg">Deliveries</ActionButton>
-        <ActionButton icon-src="/icons/receipt.svg">Invoices</ActionButton>
+        <ActionButton v-on:click="() => $router.push({name: 'deliveries'})" :icon-src="UserIcon">Deliveries</ActionButton>
+        <ActionButton :icon-src="UserIcon">Invoices</ActionButton>
       </div>
     </div>
     <div class="page-scroll-area">
@@ -74,7 +75,7 @@ onMounted(async() => { await fetchPatient()});
         <div class="w-full"></div>
         <div class="min-w-[250px] flex space-x-3">
           <PrimaryButton type="submit" class="w-full">Update</PrimaryButton>
-          <SecondaryButton type="button" class="w-full" v-on:click.prevent="()=>$router.push({name: 'patients'})">Cancel</SecondaryButton>
+          <SecondaryButton type="button" class="w-full" v-on:click.prevent="()=>$router.push({name: 'staff'})">Cancel</SecondaryButton>
         </div>
       </form>
     </div>

@@ -31,8 +31,6 @@ func Create(c echo.Context) error {
 	}
 
 	patient.StaffID = c.Get("ID").(string)
-	patient.CurrentAppointment = patient.InitialAppointment
-	patient.CurrentStatus = patient.InitialStatus
 
 	if err := config.DB.Create(&patient).Error; err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "error creating account: " + err.Error()})

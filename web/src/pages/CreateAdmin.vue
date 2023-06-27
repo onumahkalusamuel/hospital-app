@@ -4,6 +4,7 @@ import apiRequest from '../services/http/api-requests';
 import { onMounted, ref } from 'vue';
 import TextField from '../components/form/TextField.vue';
 import PrimaryButton from '../components/form/PrimaryButton.vue';
+import { toasts } from '../stores/toasts';
 
 const router = useRouter();
 const createadmin = ref(null);
@@ -22,7 +23,7 @@ const createAdmin = async () => {
   const formData = new FormData(createadmin.value as never as HTMLFormElement)
   const createAdmin = await apiRequest.post('create-admin', Object.fromEntries(formData.entries()));
   if(createAdmin.message) {
-    alert(createAdmin.message)
+    toasts.addToast({message: createAdmin.message, type: 'success'});
     router.push({name: 'hospital-setup'})
   }
 }

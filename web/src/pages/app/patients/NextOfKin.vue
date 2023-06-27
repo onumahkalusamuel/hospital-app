@@ -10,6 +10,7 @@ import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { UserPlusIcon } from '@heroicons/vue/24/outline';
 import { Patient } from '../../../interfaces';
+import { toasts } from '../../../stores/toasts';
 
 const route = useRoute();
 const router = useRouter();
@@ -27,7 +28,7 @@ const updateNextOfKin = async () => {
   const formData = Object.fromEntries(new FormData(form.value as never as HTMLFormElement).entries())
   const update = await apiRequest.post(`patients/${route.params.id}/next-of-kin`, formData);
   if(update?.message) {
-    alert("next of kin record updated successfully.")
+    toasts.addToast({message: "next of kin record updated successfully.", type: 'success'});
     router.push({ name: 'view-patient', params: { id: route.params.id } })
   }
 }
@@ -59,7 +60,7 @@ onMounted(async() => {
           <div class="min-w-[250px]"><TextField label="Email Address" placeholder="john.doe@example.com" name="email" :value="patient.next_of_kin?.email"></TextField></div>
           <div class="min-w-[250px]"><TextField label="Home / Business Address" placeholder="20 John Doe Avenue..." name="address" required :value="patient.next_of_kin?.address"></TextField></div>
           <div class="min-w-[250px]"><TextField label="Occupation" placeholder="Engineer" name="occupation" :value="patient.next_of_kin?.occupation"></TextField></div>
-          <div class="min-w-[250px]"><SelectField label="Relationship" name="relationship" :options="relationships" required/></div>
+          <div class="min-w-[250px]"><SelectField label="Relationship" name="relationship" :options="relationships" required :value="patient.next_of_kin?.relationship" /></div>
           <div class="w-full"></div>
           <div class="min-w-[250px] flex space-x-3">
             <PrimaryButton type="submit" class="w-full">Save</PrimaryButton>

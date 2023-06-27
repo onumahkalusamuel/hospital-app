@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { router } from '../../router';
 import { auth } from '../../stores/auth';
+import { toasts } from '../../stores/toasts';
 
 // axios instance
 let __api = axios.create({ baseURL: `http://${window.location.hostname}:8080/api/`, proxy: false });
@@ -50,7 +51,8 @@ const handleError = function(e: AxiosError) {
   if (e.response && e.response.data) message = (e.response.data as { message: string; }).message;
   else message = e.message;
 
-  return alert(message);
+  toasts.addToast({message, type: 'error', title: 'Error'})
+  return;
 };
 
 // for downloads
@@ -74,7 +76,7 @@ const handleDownloadError = function(blob: Blob) {
     fileReader.onload = () => {
       try {
         const message = JSON.parse(fileReader.result as string).message;
-        resolve(alert(message));
+        resolve(toasts.addToast({ message, type: 'error', title: 'Error' }));
       } catch (e) {}
     };
     fileReader.readAsText(blob);

@@ -1,6 +1,11 @@
 package main
 
 import (
+	"log"
+	"net"
+	"os"
+
+	"github.com/joho/godotenv"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
@@ -17,6 +22,22 @@ import (
 )
 
 func main() {
+
+	// load env file if on localhost
+	_, err := os.ReadFile(".env")
+	if err == nil {
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Fatalf("Error loading .env file")
+		}
+	}
+
+	// prepare all variables
+	if os.Getenv("ENV") == "dev" {
+		os.Setenv("PORT", "8080")
+		os.Setenv("HOST", "localhost")
+	}
+
 	// get router
 	e := echo.New()
 	e.Use(echomiddleware.CORS())
@@ -55,6 +76,17 @@ func main() {
 	authApi.GET("/patients/:id", patient.ReadOne)
 	authApi.PUT("/patients/:id", patient.Update)
 	authApi.DELETE("/patients/:id", patient.Delete)
+	// patient history
+	authApi.GET("/patients/:patient_id/patient-history", patient.PatientHistory)
+	authApi.POST("/patients/:patient_id/patient-history", patient.PatientHistoryCreate)
+	authApi.GET("/patients/:patient_id/patient-history/:history_id", patient.PatientHistoryReadOne)
+	authApi.PUT("/patients/:patient_id/patient-history/:history_id", patient.PatientHistoryUpdate)
+	authApi.DELETE("/patients/:patient_id/patient-history/:history_id", patient.PatientHistoryDelete)
+
+	authApi.POST("/patients/:patient_id/admit-patient", patient.AdmitPatient)
+	authApi.POST("/patients/:patient_id/discharge-patient", patient.DischargePatient)
+	authApi.POST("/patients/:patient_id/initiate-appointment", patient.InitiateAppointment)
+
 	// next of kin
 	authApi.POST("/patients/:patient_id/next-of-kin", patient.PatientNextOfKin)
 	// patient invoices
@@ -75,5 +107,5 @@ func main() {
 	authApi.POST("/invoices/:invoice_id/payments", payment.Create)
 	authApi.DELETE("/invoices/:invoice_id/payments/:id", payment.Delete)
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(net.JoinHostPort(os.Getenv("HOST"), os.Getenv("PORT"))))
 }

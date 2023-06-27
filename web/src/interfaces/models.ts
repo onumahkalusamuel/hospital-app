@@ -1,3 +1,5 @@
+import { PatientHistoryTypes, RoleTypes } from '.';
+
 export interface Patient {
   id: string;
   created_at: Date,
@@ -14,7 +16,10 @@ export interface Patient {
   sex: string;
   address: string;
   occupation: string;
+  marital_status: string;
   next_of_kin?: NextOfKin;
+  patient_history?: PatientHistory[];
+  invoices?: Invoice[];
 }
 
 export interface NextOfKin {
@@ -60,8 +65,8 @@ export interface Invoice {
   amount: number;
   balance: number;
   completed: number;
-  payments: Payment[];
-  patient: Patient;
+  payments?: Payment[];
+  patient?: Patient;
 }
 
 export interface InvoiceDetials {
@@ -87,9 +92,10 @@ export interface Payment {
 export interface PatientHistory {
   id: string;
   patient_id: string;
-  date: string;
-  type: string;
+  date_time: string;
+  type: PatientHistoryTypes;
   details: { [key: string]: any; };
+  patient?: Patient
 }
 
 export interface Settings {
@@ -106,13 +112,7 @@ export interface Staff {
   phone: string;
   email: string;
   sex: string;
-  role: 1 | 2 | 3;
+  role: RoleTypes;
   username: string;
   password?: string;
-}
-
-export const Roles = {
-  1: "Admin",
-  2: "Doctor",
-  3: "Nurse"
 }

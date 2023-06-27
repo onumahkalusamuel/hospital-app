@@ -25,4 +25,10 @@ export const user = reactive({
     }
     return this[key];
   },
+  reset () {
+    (['id', 'firstname', 'lastname', 'phone', 'email', 'username'] as userKeys[]).forEach((key) => {
+      this.set(key, '');
+      this.set('role', '0');
+    });
+  }
 });

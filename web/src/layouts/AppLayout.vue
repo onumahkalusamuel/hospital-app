@@ -1,14 +1,14 @@
 <script lang="ts">
 import { RouterView, RouterLink } from 'vue-router';
 import apiRequest from '../services/http/api-requests';
-import { user } from '../stores/user';
-import { hospital } from '../stores/hospital';
+import { user, auth, hospital } from '../stores';
 import TextField from '../components/form/TextField.vue';
 import {
   MagnifyingGlassIcon,
   Bars4Icon,
   BellAlertIcon,
   Cog8ToothIcon,
+  LockClosedIcon,
 } from '@heroicons/vue/24/outline';
 
 
@@ -18,7 +18,8 @@ export default {
     setup() {
         return {
             user,
-            hospital
+            hospital,
+            auth
         };
     },
     async mounted() {
@@ -36,7 +37,7 @@ export default {
             console.log(e);
         }
     },
-    components: { TextField, MagnifyingGlassIcon, Bars4Icon, BellAlertIcon, Cog8ToothIcon, RouterLink }
+    components: { TextField, MagnifyingGlassIcon, Bars4Icon, BellAlertIcon, Cog8ToothIcon, RouterLink, LockClosedIcon }
 }; </script>;
 
 <template>
@@ -59,18 +60,16 @@ export default {
         <a class="header-icon-link w-[48px]">
           <bell-alert-icon class="text-white h-5 w-5"/>
         </a>
-        <a class="header-icon-link w-[48px]">
-          <cog8-tooth-icon class="text-white h-5 w-5"/>
-        </a>
       </div>
       <a class="header-icon-link hover:bg-[#1664a7]">
-        <div class="avatarmenu-container">
-          <div class="avatarmenu-username">{{ user.get('username') }}</div>
+        <div class="flex flex-col text-right px-3">
+          <div class="avatarmenu-username">{{ user.get('lastname') }} {{ user.get('firstname') }}</div>
           <div class="avatarmenu-userid">{{  user.get('id') }}</div>
         </div>
-        <div class="avatarmenu-image-container">
-          <img src="/avatar.png" alt="avatar" class="avatar"/>
-        </div>
+      </a>
+      <a class="header-icon-link px-3" @click="() => {auth.setJwt(''); user.reset(); $router.push({name:'login'});}">
+        <lock-closed-icon class="text-white h-5 w-5 mr-2"/>
+        <span>Logout</span>
       </a>
     </header>
     <main class="flex-1 flex-scroll">
@@ -113,9 +112,7 @@ export default {
   border-radius: 28px;
   border:0;
 }
-.avatarmenu-container {
-padding-left: 20px ;text-align:right; flex:1 1 auto
-}
+
 .avatarmenu-username {
   white-space: nowrap;
   overflow: hidden;
