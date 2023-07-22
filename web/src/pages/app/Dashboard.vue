@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { user } from '../../stores/user';
-import { UsersIcon, UserGroupIcon, BanknotesIcon, QueueListIcon, Cog8ToothIcon } from '@heroicons/vue/24/solid';
+import { user } from '@/stores/user';
+import { UsersIcon, UserGroupIcon, BanknotesIcon, QueueListIcon, UserIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 
 const links = ref([
@@ -13,13 +13,13 @@ const links = ref([
 </script>;
 
 <template>
-  <div class="dashboard-container">
+  <div class="p-[15px]">
     <div class="dashboard-title">Welcome, {{ user.role > '1' ? (user.role == '2' ? 'Dr.': 'Nrs.'): '' }} {{ user.lastname }} {{ user.firstname }}</div>
     <hr/>
     <div class="flex flex-wrap justify-around">
       <router-link v-if="user.role == '1'" class="hover:bg-[azure] dashboard-body-item" :to="{name: 'staff'}">
         <div class="h-[156px] w-[156px]">
-          <component :is="Cog8ToothIcon"/>
+          <component :is="UserIcon"/>
         </div>
         <div class="mt-5 text-2xl font-bold">Staff</div>
       </router-link>
@@ -33,9 +33,7 @@ const links = ref([
    </div>
 </template>
 <style scoped>
-.dashboard-container {
-  padding: 15px;
-}
+
 .dashboard-title {
   font-size: 2rem;
   padding: 80px 0 20px 0;

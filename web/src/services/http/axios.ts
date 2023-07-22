@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { router } from '../../router';
-import { auth } from '../../stores/auth';
-import { toasts } from '../../stores/toasts';
+import { router } from '@/router';
+import { auth } from '@/stores/auth';
+import { toasts } from '@/stores/toasts';
 
 // axios instance
 let __api = axios.create({ baseURL: `http://${window.location.hostname}:8080/api/`, proxy: false });

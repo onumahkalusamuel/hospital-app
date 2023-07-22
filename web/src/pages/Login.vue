@@ -1,9 +1,9 @@
 <script lang="ts" >
-import PrimaryButton from '../components/form/PrimaryButton.vue';
-import TextField from '../components/form/TextField.vue';
-import apiRequest from '../services/http/api-requests';
-import { auth } from '../stores/auth';
-import { toasts } from '../stores/toasts';
+import PrimaryButton from '@/components/form/PrimaryButton.vue';
+import TextField from '@/components/form/TextField.vue';
+import apiRequest from '@/services/http/api-requests';
+import { auth } from '@/stores/auth';
+import { toasts } from '@/stores/toasts';
 
 export default {
     name: "Login",
@@ -43,7 +43,7 @@ export default {
 <template>
   <div class="h-screen flex flex-col sm:flex-row">
     <div class="bg-[url('/hospital-image.png')] bg-cover bg-no-repeat flex-1"></div>
-    <div class="p-5 flex flex-col max-w-[400px] min-h-[85vh] justify-between mx-auto sm:py-10">
+    <div class="p-5 flex flex-col w-[400px] min-h-[85vh] justify-between mx-auto sm:py-10">
       <div class="flex justify-between items-center">
         <div class="w-full">
           <div class="text-2xl">{{ hospital_name }}</div>

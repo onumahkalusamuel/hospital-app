@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { toasts } from '../stores/toasts';
-import { Toast } from '../types';
+import { toasts } from '@/stores/toasts';
+import { Toast } from '@/types';
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 
 const props = 

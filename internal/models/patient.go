@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/onumahkalusamuel/hospital-app/config"
+	"github.com/onumahkalusamuel/hospital-app/pkg"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
@@ -97,7 +98,30 @@ func (u *Patient) AfterCreate(tx *gorm.DB) (err error) {
 	return
 }
 
-func PatientBasicPreload() *gorm.DB {
-	db := config.DB
-	return db.Select("firstname", "middlename", "lastname")
+func (cg *Patient) List(pagination pkg.Pagination, preloads []string) (*pkg.Pagination, error) {
+	var patients []*Patient
+
+	db := config.DB.Scopes(Paginate(patients, &pagination, config.DB))
+	if len(preloads) > 0 {
+		for _, v := range preloads {
+			db.Preload(v)
+		}
+	}
+
+	if pagination.Query != "" {
+		db.Where(
+			"lastname LIKE '" + pagination.Query + "%' OR " +
+				"firstname LIKE '" + pagination.Query + "%' OR " +
+				"middlename LIKE '" + pagination.Query + "%' OR " +
+				"card_no LIKE '%" + pagination.Query + "%' OR " +
+				"phone LIKE '" + pagination.Query + "%' OR " +
+				"email LIKE '" + pagination.Query + "%' OR " +
+				"occupation LIKE '" + pagination.Query + "%'")
+	}
+
+	db.Find(&patients)
+
+	pagination.Rows = patients
+
+	return &pagination, nil
 }

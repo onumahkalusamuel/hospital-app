@@ -1,20 +1,32 @@
 <script lang="ts" setup>
-import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumbs.vue';
-import ActionButton from '../../../components/ActionButton.vue';
-import PageHeader from '../../../components/PageHeader.vue';
-import apiRequest from '../../../services/http/api-requests';
-import { Patient } from '../../../interfaces'
-import TextField from '../../../components/form/TextField.vue';
-import { UsersIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
-import { onMounted, ref } from 'vue';
-import { toasts } from '../../../stores/toasts';
+import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumbs.vue';
+import ActionButton from '@/components/ActionButton.vue';
+import PageHeader from '@/components/PageHeader.vue';
+import apiRequest from '@/services/http/api-requests';
+import { Patient, Pagination } from '@/interfaces'
+import TextField from '@/components/form/TextField.vue';
+import { UsersIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { onMounted, ref, watch } from 'vue';
+import { toasts } from '@/stores/toasts';
+import Paging from '@/components/Paging.vue';
+import { useDebounce } from '@/utils/debounce';
+const debounce = useDebounce()
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
   { title: "Patients", current: true },
 ] as BreadcrumbItem[]);
 
-const patients= ref([] as Patient[]);
+const pagination = ref({
+  limit: 10,
+  page: 1,
+  rows: [] as Patient[],
+  sort_key: '',
+  sort_order: 'desc',
+  total_pages: 0,
+  total_rows: 0,
+  query: ''
+} as Pagination);
 
 const deletItem = async (id: string)  => {
   const del = await apiRequest.deleteRecord(`patients/${id}`);
@@ -22,11 +34,17 @@ const deletItem = async (id: string)  => {
   fetchPatients();
 }
 
-const fetchPatients =async () => {
-  patients.value = await apiRequest.get('patients');  
+const fetchPatients = async () => {
+  debounce(async () => {
+    const filter = {...pagination.value, rows: null };
+    pagination.value = await apiRequest.get(`patients?${new URLSearchParams(filter as never as Record<string, string>)}`);
+  });
 }
 
-onMounted(async() => {fetchPatients()})
+onMounted(() => {fetchPatients()})
+watch(() => pagination.value.limit, fetchPatients);
+watch(() => pagination.value.page, fetchPatients);
+watch(() => pagination.value.query, fetchPatients);
 </script>;
 
 <template>
@@ -34,12 +52,12 @@ onMounted(async() => {fetchPatients()})
     <Breadcrumbs :items="breadcrumbs"></Breadcrumbs>
     <PageHeader title="Patients" subtitle="Manage patients" :icon-src="UsersIcon">
     </PageHeader>
-    <div style="padding: 0 15px; display: flex; justify-content: space-between; border-top:1px solid #333">
+    <div class="px-[15px] flex justify-between border-t-[1px] border-[#333] py-2">
       <div>
         <ActionButton v-on:click="() => $router.push({name: 'add-patient'})" :icon-src="UsersIcon">Add patient</ActionButton>
       </div>
       <div>
-        <TextField name="" placeholder="Search">
+        <TextField placeholder="Search" v-model="pagination.query">
           <template #prepend>
             <MagnifyingGlassIcon class="h-5 w-5" />
           </template>
@@ -49,7 +67,7 @@ onMounted(async() => {fetchPatients()})
 
     <hr class="ml-4 mr-4" />
     <div class="page-scroll-area">
-      <div v-if="!patients.length">
+      <div v-if="!pagination.rows.length">
         <div class="text-center mt-4 mb-4 pt-4">No records found</div>
         <hr/>
       </div>
@@ -64,8 +82,8 @@ onMounted(async() => {fetchPatients()})
           <div class="cell-data">Actions</div>
         </div>
         <div class="table-body">
-          <div class="table-row" v-for="patient, i in patients" :key="patient.id">
-            <div class="cell-data cell-sn">{{ i + 1 }}</div>
+          <div class="table-row" v-for="patient, i in pagination.rows" :key="patient.id">
+            <div class="cell-data cell-sn">{{ i + 1 }}.</div>
             <div class="cell-data cell-size-1">
               <router-link class="text-blue-600 hover:underline" :to="{name: 'view-patient', params: { id: patient.id }}">
                 {{ `${patient.firstname} ${patient.lastname}` }}
@@ -76,14 +94,12 @@ onMounted(async() => {fetchPatients()})
             <div class="cell-data">{{ patient.phone }}</div>
             <div class="cell-data cell-size-1">{{ patient.current_appointment }}</div>
             <div class="cell-data">
-              <ActionButton v-on:click="deletItem(patient.id)" :icon-src="UsersIcon">Delete</ActionButton>
+              <ActionButton v-on:click="deletItem(patient.id)" :icon-src="TrashIcon">Delete</ActionButton>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <Paging v-model="pagination" />
   </div>
 </template>
-
-<style scoped>
-</style>

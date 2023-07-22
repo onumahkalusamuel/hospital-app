@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/onumahkalusamuel/hospital-app/config"
+	"github.com/onumahkalusamuel/hospital-app/pkg"
 )
 
 type PatientHistory struct {
@@ -70,7 +71,11 @@ func (m *PatientHistory) ReadAll() (bool, []PatientHistory) {
 	return true, PatientHistorys
 }
 
-func (m *PatientHistory) UpdateLastPing() error {
-	// .Format("2006-01-02")
-	return config.DB.Model(&m).Update("last_ping", time.Now()).Error
+func (cg *PatientHistory) List(pagination pkg.Pagination) (*pkg.Pagination, error) {
+	var records []*PatientHistory
+
+	config.DB.Scopes(Paginate(records, &pagination, config.DB)).Find(&records)
+	pagination.Rows = records
+
+	return &pagination, nil
 }

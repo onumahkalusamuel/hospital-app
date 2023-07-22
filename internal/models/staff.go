@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/onumahkalusamuel/hospital-app/config"
+	"github.com/onumahkalusamuel/hospital-app/pkg"
 	"gorm.io/gorm"
 )
 
@@ -55,4 +56,34 @@ func (m *Staff) ReadAll() (bool, []Staff) {
 		return false, Staffs
 	}
 	return true, Staffs
+}
+
+func (cg *Staff) List(pagination pkg.Pagination, preloads []string) (*pkg.Pagination, error) {
+	var records []*Staff
+
+	db := config.DB.Scopes(Paginate(records, &pagination, config.DB))
+	if len(preloads) > 0 {
+		for _, v := range preloads {
+			db.Preload(v)
+		}
+	}
+
+	if pagination.Query != "" {
+		db.Where(
+			"lastname LIKE '" + pagination.Query + "%' OR " +
+				"firstname LIKE '" + pagination.Query + "%' OR " +
+				"middlename LIKE '" + pagination.Query + "%' OR " +
+				"username LIKE '" + pagination.Query + "%' OR " +
+				"phone LIKE '" + pagination.Query + "%' OR " +
+				"email LIKE '" + pagination.Query + "%'")
+	}
+
+	// exclude admin
+	db.Where("role != 1")
+
+	db.Find(&records)
+
+	pagination.Rows = records
+
+	return &pagination, nil
 }

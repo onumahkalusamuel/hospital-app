@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import { computed } from 'vue';
 import Toast from './Toast.vue'
-import { toasts } from '../stores/toasts';
+import { toasts } from '@/stores/toasts';
 
 // const items = computed(()=> toasts.toasts);
 

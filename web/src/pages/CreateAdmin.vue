@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
-import apiRequest from '../services/http/api-requests';
+import apiRequest from '@/services/http/api-requests';
 import { onMounted, ref } from 'vue';
-import TextField from '../components/form/TextField.vue';
-import PrimaryButton from '../components/form/PrimaryButton.vue';
-import { toasts } from '../stores/toasts';
+import TextField from '@/components/form/TextField.vue';
+import PrimaryButton from '@/components/form/PrimaryButton.vue';
+import { toasts } from '@/stores/toasts';
 
 const router = useRouter();
 const createadmin = ref(null);

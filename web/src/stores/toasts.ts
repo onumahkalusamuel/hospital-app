@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import { Toast } from '../types';
+import { Toast } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const toasts = reactive({

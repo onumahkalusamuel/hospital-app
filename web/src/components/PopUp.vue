@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { XMarkIcon } from '@heroicons/vue/24/solid'
-import {popupStore} from '../stores';
+import {popupStore} from '@/stores';
 
 defineProps<{ id: string; title: string }>();
 const close = () => {popupStore.id = ''; popupStore.show = false;}

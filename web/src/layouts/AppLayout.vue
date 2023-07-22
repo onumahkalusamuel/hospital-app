@@ -1,70 +1,73 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { RouterView, RouterLink } from 'vue-router';
-import apiRequest from '../services/http/api-requests';
-import { user, auth, hospital } from '../stores';
-import TextField from '../components/form/TextField.vue';
-import {
-  MagnifyingGlassIcon,
-  Bars4Icon,
-  BellAlertIcon,
-  Cog8ToothIcon,
-  LockClosedIcon,
-} from '@heroicons/vue/24/outline';
+import apiRequest from '@/services/http/api-requests';
+import { user, auth, hospital } from '@/stores';
+import { UserIcon, SparklesIcon, Cog8ToothIcon, LockClosedIcon, QueueListIcon, BanknotesIcon, UserGroupIcon, UsersIcon } from '@heroicons/vue/24/outline';
+import { onMounted } from 'vue';
 
+onMounted(async () => {
+  try {
+    // get hospital
+    const req = await apiRequest.get("hospital-details");
+    if (req)
+        hospital.setAll(req);
+    // get user
+    const profile = await apiRequest.get("profile");
+    if (profile)
+        user.setAll(profile);
+  }
+  catch (e) {
+      console.log(e);
+  }
+})
 
-export default {
-    name: "AppLayout",
-    methods: {},
-    setup() {
-        return {
-            user,
-            hospital,
-            auth
-        };
-    },
-    async mounted() {
-        try {
-            // get hospital
-            const req = await apiRequest.get("hospital-details");
-            if (req)
-                hospital.setAll(req);
-            // get user
-            const profile = await apiRequest.get("profile");
-            if (profile)
-                user.setAll(profile);
-        }
-        catch (e) {
-            console.log(e);
-        }
-    },
-    components: { TextField, MagnifyingGlassIcon, Bars4Icon, BellAlertIcon, Cog8ToothIcon, RouterLink, LockClosedIcon }
-}; </script>;
+</script>;
 
 <template>
   <div class="flex flex-col h-screen">
     <header class="w-full flex toolbar bg-[#0078d4] h-[40px]">
-      <a class="header-icon-link w-[48px] hover:bg-[#1664a7]">
-        <bars4-icon class="text-white h-6 w-6" />
-      </a>
-      <router-link class="header-icon-link font-bold text-[14px] px-3 hover:bg-[#1664a7]" :to="{name: 'dashboard'}">
-        {{ hospital.get('hospital_name') }}
-      </router-link>   
-      <div class="search-container flex flex-col h-full items-center">
-        <text-field name="search" class="max-w-[800px] border-none mb-none" placeholder="Search">
-          <template #prepend>
-            <magnifying-glass-icon class="h-5 w-5 text-gray-500"/>
-          </template>
-        </text-field>
+      <div class="flex items-center text-white">
+        <router-link class="header-icon-link font-bold text-[14px] px-3 hover:bg-[#1664a7]" :to="{name: 'dashboard'}">
+          <SparklesIcon class="text-white h-6 w-6 mr-2" />
+          {{ hospital.get('hospital_name') }}
+        </router-link>
+      </div>
+      <div class="search-container flex items-center flex-1 justify-center font-bold uppercase">
+        
+        <router-link :class="$route.name == 'staff'? 'bg-[#00000033]':''" :to="{name:'staff'}" class="header-icon-link px-3" v-if="user.role == '1'">
+          <UserIcon class="text-white h-5 w-5 mr-2"/>
+          <span>Staff</span>
+        </router-link>
+
+        <router-link :class="$route.name == 'patients'? 'bg-[#00000033]':''" :to="{name:'patients'}" class="header-icon-link px-3">
+          <UsersIcon class="text-white h-5 w-5 mr-2"/>
+          <span>Patients</span>
+        </router-link>
+
+        <router-link :class="$route.name == 'deliveries'? 'bg-[#00000033]':''" :to="{name:'deliveries'}" class="header-icon-link px-3">
+          <UserGroupIcon class="text-white h-5 w-5 mr-2"/>
+          <span>Deliveries</span>
+        </router-link>
+
+        <router-link :class="$route.name == 'invoices'? 'bg-[#00000033]':''" :to="{name:'invoices'}" class="header-icon-link px-3">
+          <BanknotesIcon class="text-white h-5 w-5 mr-2"/>
+          <span>Billings</span>
+        </router-link>
+
+        <router-link :class="$route.name == 'reports'? 'bg-[#00000033]':''" :to="{name:'reports'}" class="header-icon-link px-3 font-bold">
+          <QueueListIcon class="text-white h-5 w-5 mr-2"/>
+          <span>REPORTS</span>
+        </router-link>
+
       </div>
       <div style="display:flex; flex: 0 0 auto">
-        <a class="header-icon-link w-[48px]">
-          <bell-alert-icon class="text-white h-5 w-5"/>
-        </a>
+        <router-link class="header-icon-link w-[48px]" :to="{ name: 'settings' }">
+          <cog8-tooth-icon class="text-white h-5 w-5"/>
+        </router-link>
       </div>
       <a class="header-icon-link hover:bg-[#1664a7]">
         <div class="flex flex-col text-right px-3">
-          <div class="avatarmenu-username">{{ user.get('lastname') }} {{ user.get('firstname') }}</div>
-          <div class="avatarmenu-userid">{{  user.get('id') }}</div>
+          <div class="avatarmenu-username">[{{ user.get('username') }}]</div>
         </div>
       </a>
       <a class="header-icon-link px-3" @click="() => {auth.setJwt(''); user.reset(); $router.push({name:'login'});}">
@@ -100,10 +103,6 @@ export default {
   margin-right: 15px;
   min-width: 200px;
   margin-left: 7px;
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  justify-content: center;
 }
 
 .avatar {
@@ -115,8 +114,6 @@ export default {
 
 .avatarmenu-username {
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   font-size: 14px;
   line-height: normal;
   max-width: 160px;

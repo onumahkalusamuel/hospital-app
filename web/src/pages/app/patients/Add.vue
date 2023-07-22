@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumbs.vue';
-import PageHeader from '../../../components/PageHeader.vue';
-import apiRequest from '../../../services/http/api-requests';
+import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumbs.vue';
+import PageHeader from '@/components/PageHeader.vue';
+import apiRequest from '@/services/http/api-requests';
 import dayjs from 'dayjs'
-import TextField from '../../../components/form/TextField.vue';
-import PrimaryButton from '../../../components/form/PrimaryButton.vue';
-import SecondaryButton from '../../../components/form/SecondaryButton.vue';
-import SelectField from '../../../components/form/SelectField.vue';
+import TextField from '@/components/form/TextField.vue';
+import PrimaryButton from '@/components/form/PrimaryButton.vue';
+import SecondaryButton from '@/components/form/SecondaryButton.vue';
+import SelectField from '@/components/form/SelectField.vue';
 import { ref } from 'vue';
-import { router } from '../../../router';
+import { router } from '@/router';
 import { UserPlusIcon } from '@heroicons/vue/24/outline';
-import { toasts } from '../../../stores/toasts';
+import { toasts } from '@/stores/toasts';
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
@@ -58,7 +58,7 @@ const create = async () => {
           <div class="w-full"></div>
           <div class="min-w-[250px] flex space-x-3">
             <PrimaryButton type="submit" class="w-full">Submit</PrimaryButton>
-            <SecondaryButton type="button" class="w-full" v-on:click.prevent="()=>$router.push({name: 'patients'})">Cancel</SecondaryButton>
+            <SecondaryButton type="button" class="w-full" v-on:click.prevent="()=>$router.go(-1)">Cancel</SecondaryButton>
           </div>
       </form>
     </div>

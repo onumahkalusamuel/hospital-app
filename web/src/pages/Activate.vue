@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import apiRequest from '../services/http/api-requests';
+import apiRequest from '@/services/http/api-requests';
 import { useRoute, useRouter } from 'vue-router';
-import TextField from '../components/form/TextField.vue';
+import TextField from '@/components/form/TextField.vue';
 import { DocumentDuplicateIcon } from '@heroicons/vue/24/solid'
-import PrimaryButton from '../components/form/PrimaryButton.vue';
-import { toasts } from '../stores/toasts';
+import PrimaryButton from '@/components/form/PrimaryButton.vue';
+import { toasts } from '@/stores/toasts';
 
 const installation_code = ref('');
 const router = useRouter();

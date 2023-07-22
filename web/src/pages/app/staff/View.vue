@@ -8,13 +8,12 @@ import SelectField from '../../../components/form/SelectField.vue';
 import TextField from '../../../components/form/TextField.vue';
 import PrimaryButton from '../../../components/form/PrimaryButton.vue';
 import SecondaryButton from '../../../components/form/SecondaryButton.vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import {UserIcon} from '@heroicons/vue/24/solid'
 import { toasts } from '../../../stores/toasts';
 
 const route = useRoute();
-const router = useRouter();
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
@@ -24,21 +23,23 @@ const breadcrumbs = ref([
 const staff = ref({} as Staff);
 const form = ref(null);
 
-const fetchStaff = async () => {
+const fetchStaff = async (first:boolean = false) => {
   staff.value = await apiRequest.get(`staff/${route.params.id}`);
-  
+  if(!first) {
+    breadcrumbs.value.pop();
+  }
   breadcrumbs.value.push({ title: `${staff.value.lastname} ${staff.value.firstname}`, current: true });
 }
 const update = async () => {
-  const formData = Object.fromEntries(new FormData(form as never as HTMLFormElement).entries())
-  const create = await apiRequest.post('staff', formData);
-  if(create.id) {
-    toasts.addToast({message: "account created successfully.", type: 'success'});
-    router.push({ name: 'view-staff', params: { id: create.id } })
+  const formData = Object.fromEntries(new FormData(form.value as never as HTMLFormElement).entries())
+  const update = await apiRequest.put(`staff/${route.params.id}`, {...formData, role: parseInt(formData.role as string)});
+  if(update.message) {
+    toasts.addToast({message: update.message, type: 'success'});
+    await fetchStaff();
   }
 }
 
-onMounted(async() => { await fetchStaff()});
+onMounted(async() => { await fetchStaff(true)});
 
 </script>;
 
@@ -54,14 +55,17 @@ onMounted(async() => { await fetchStaff()});
     </div>
     <div class="page-scroll-area">
       <form method="POST" v-on:submit.prevent="update" class="form flex flex-wrap gap-3 pl-4" ref="form">
-          <div class="min-w-[250px]">
-            <TextField label="First Name" placeholder="John" :value="staff.firstname"></TextField>
+        <div class="min-w-[250px]">
+            <SelectField label="Role" name="role" :value="staff.role" :options="[['Nurse', 3],['Doctor', 2]]" required/>
           </div>
           <div class="min-w-[250px]">
-            <TextField label="Middle Name" placeholder="M." :value="staff.middlename"></TextField>
+            <TextField label="First Name" placeholder="John" name="firstname" :value="staff.firstname"></TextField>
           </div>
           <div class="min-w-[250px]">
-            <TextField label="Last Name" placeholder="Doe" :value="staff.lastname"></TextField>
+            <TextField label="Middle Name" placeholder="M." name="middlename" :value="staff.middlename"></TextField>
+          </div>
+          <div class="min-w-[250px]">
+            <TextField label="Last Name" placeholder="Doe" name="lastname" :value="staff.lastname"></TextField>
           </div>
           <div class="min-w-[250px]">
             <SelectField label="Gender" name="sex" :options="[['Male'], ['Female']]" required :value="staff.sex" />

@@ -1,6 +1,7 @@
 package staff
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -9,50 +10,37 @@ import (
 	"github.com/onumahkalusamuel/hospital-app/pkg"
 )
 
-type UpdateStaffRequest struct {
+type UpdateProfileRequest struct {
 	Firstname  string `json:"firstname"`
 	Lastname   string `json:"lastname"`
 	Middlename string `json:"middlename"`
 	Username   string `json:"username"`
 	Password   string `json:"password"`
+	Email      string `json:"email"`
 	Phone      string `json:"phone"`
-	Role       uint   `json:"role"`
 }
 
-func Update(c echo.Context) error {
-	if c.Get("Role").(float64) > config.ADMIN_ROLE {
-		return c.JSON(http.StatusUnauthorized, echo.Map{"message": "unauthorized access"})
-	}
-
-	var req UpdateStaffRequest
+func UpdateProfile(c echo.Context) error {
+	var req UpdateProfileRequest
 
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request"})
 	}
 
+	fmt.Println(req)
+
 	staff := &models.Staff{}
-	staff.ID = c.Param("id")
-	staff.Read()
+	staff.ID = c.Get("ID").(string)
 
 	if err := staff.Read(); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request: " + err.Error()})
 	}
 
-	if req.Firstname != staff.Firstname {
-		staff.Firstname = req.Firstname
-	}
-
-	if req.Lastname != staff.Lastname {
-		staff.Lastname = req.Lastname
-	}
-
-	if req.Middlename != staff.Middlename {
-		staff.Middlename = req.Middlename
-	}
-
-	if req.Role != staff.Role {
-		staff.Role = req.Role
-	}
+	staff.Firstname = req.Firstname
+	staff.Lastname = req.Lastname
+	staff.Middlename = req.Middlename
+	staff.Phone = req.Phone
+	staff.Email = req.Email
 
 	if req.Password != "" {
 		staff.UpdateSingle("password", pkg.HashPassword(req.Password))
@@ -60,5 +48,5 @@ func Update(c echo.Context) error {
 
 	config.DB.Updates(&staff)
 
-	return c.JSON(http.StatusOK, echo.Map{"message": "record updated successfully."})
+	return c.JSON(http.StatusOK, echo.Map{"message": "profile updated successfully."})
 }

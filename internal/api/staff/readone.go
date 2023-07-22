@@ -11,7 +11,7 @@ func ReadOne(c echo.Context) error {
 	staff := &models.Staff{}
 	staff.ID = c.Param("id")
 	staff.Read()
-	if staff.Firstname == "" {
+	if staff.Username == "" {
 		return c.JSON(http.StatusNotFound, echo.Map{"message": "Staff record not found"})
 	}
 

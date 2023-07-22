@@ -10,8 +10,19 @@ defineProps<{
   label?: string;
   value?: string;
   readonly?: boolean;
+  disabled?: boolean;
   step?: string;
+  max?: string | number;
+  min?: string | number;
+  modelValue?: String | Number;
 }>()
+
+const emit = defineEmits(['update:modelValue'])
+
+const updateValue = (event: any) => {
+    emit('update:modelValue', event.target.value)
+}
+
 </script>
 <template>
   <label v-if="label" class="text-uppercase cursor-pointer py-1 block" :for="name">
@@ -22,7 +33,7 @@ defineProps<{
     <div v-if="$slots.prepend" class="px-2 flex items-center justify-center hover:bg-gray-100 rounded">
       <slot name="prepend"></slot>
     </div>
-    <input class="h-[28px] w-full rounded py-1 px-2 hover:bg-gray-100 focus:outline-none" :name="name" :placeholder="placeholder" :type="type || 'text'" :required="required" :autocomplete="`new-${name}`" :id="name" :value="value" :readonly="readonly" :step="step" :ref="ref" />
+    <input class="h-[28px] w-full rounded py-1 px-2 hover:bg-gray-100 focus:outline-none" :name="name" :placeholder="placeholder" :type="type || 'text'" :required="required" :autocomplete="`new-${name}`" :id="name" :value="modelValue || value" :readonly="readonly" :step="step" :ref="ref" @input="updateValue" :disabled="disabled" :max="max" :min="min"/>
     <div v-if="$slots.append" class="px-2 flex items-center justify-center hover:bg-gray-100 rounded">
       <slot name="append"></slot>
     </div>

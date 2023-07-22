@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/onumahkalusamuel/hospital-app/config"
+	"github.com/onumahkalusamuel/hospital-app/pkg"
 	"gorm.io/gorm"
 )
 
@@ -55,4 +56,13 @@ func (m *Invoice) ReadAll() (bool, []Invoice) {
 		return false, Invoices
 	}
 	return true, Invoices
+}
+
+func (cg *Invoice) List(pagination pkg.Pagination) (*pkg.Pagination, error) {
+	var invoices []*Invoice
+
+	config.DB.Scopes(Paginate(invoices, &pagination, config.DB)).Find(&invoices)
+	pagination.Rows = invoices
+
+	return &pagination, nil
 }

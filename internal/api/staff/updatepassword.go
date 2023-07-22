@@ -24,7 +24,6 @@ func UpdatePassword(c echo.Context) error {
 
 	staff := &models.Staff{}
 	staff.ID = c.Get("id").(string)
-	staff.Read()
 
 	if err := staff.Read(); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "bad request: " + err.Error()})

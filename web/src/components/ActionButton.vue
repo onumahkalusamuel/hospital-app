@@ -7,13 +7,14 @@ defineProps<{
   outline?: boolean;
   classes?: string;
   iconClass?: string;
+  dark?: boolean;
 }>()
 </script>
 <template>
   <div style="display:inline-block">  
-    <div class='cursor-pointer flex items-center h-[36px] px-[4px] hover:bg-[azure] text-[#333]' :class="( disabled ?' disabled ':' ') + (outline ? ' outline ':' ') +(classes ? classes : '')">
+    <div class='rounded cursor-pointer flex items-center h-[36px] px-[4px]' :class=" dark ? 'hover:bg-blue-800 bg-blue-700 text-white': 'hover:bg-blue-100 text-[#333]'">
       <div class="text-[#0078d4] flex items-center px-[4px]" v-if="iconSrc">
-        <component :is="iconSrc" :class="iconClass" class="w-[16px] h-[16px]" />
+        <component :is="iconSrc" :class=" dark ? 'text-white': ''" class="w-[16px] h-[16px]" />
       </div>
       <div class="px-[4px]"><slot></slot></div>
     </div>

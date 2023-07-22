@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumbs.vue';
-import ActionButton from '../../../components/ActionButton.vue';
-import PageHeader from '../../../components/PageHeader.vue';
-import apiRequest from '../../../services/http/api-requests';
-import { Patient } from '../../../interfaces'
+import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumbs.vue';
+import ActionButton from '@/components/ActionButton.vue';
+import PageHeader from '@/components/PageHeader.vue';
+import apiRequest from '@/services/http/api-requests';
+import { Patient } from '@/interfaces'
 import dayjs from 'dayjs'
-import SelectField from '../../../components/form/SelectField.vue';
-import TextField from '../../../components/form/TextField.vue';
-import PrimaryButton from '../../../components/form/PrimaryButton.vue';
-import SecondaryButton from '../../../components/form/SecondaryButton.vue';
+import SelectField from '@/components/form/SelectField.vue';
+import TextField from '@/components/form/TextField.vue';
+import PrimaryButton from '@/components/form/PrimaryButton.vue';
+import SecondaryButton from '@/components/form/SecondaryButton.vue';
 import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import {UserIcon} from '@heroicons/vue/24/solid'
-import { toasts, popupStore } from '../../../stores';
+import { toasts, popupStore } from '@/stores';
 import AdmitPatientPopup from './popups/AdmitPatientPopup.vue';
 import DischargePatientPopup from './popups/DischargePatientPopup.vue';
 import AppointmentPopup from './popups/AppointmentPopup.vue';
@@ -96,9 +96,9 @@ onMounted(async() => { await fetchPatient()});
     </PageHeader>
     <div class="px-[15px] flex justify-between">
       <div class="flex gap-2">
-        <ActionButton icon-class="text-white" classes="rounded bg-red-700 text-white hover:bg-red-500" v-on:click="() => $router.push({name: 'next-of-kin'})" :icon-src="UserIcon">Next of kin</ActionButton>
-        <ActionButton icon-class="text-white" classes="bg-red-700 text-white hover:bg-red-500" v-on:click="() => $router.push({name: 'add-patient'})" :icon-src="UserIcon">Deliveries</ActionButton>
-        <ActionButton icon-class="text-white" classes="bg-red-700 text-white hover:bg-red-500" v-if="'Admitted' !== patient.current_status" :icon-src="UserIcon" @click="showAdmitPatientPopup">Admit patient</ActionButton>
+        <ActionButton dark v-on:click="() => $router.push({name: 'next-of-kin'})" :icon-src="UserIcon">Next of kin</ActionButton>
+        <ActionButton dark v-on:click="() => $router.push({name: 'add-patient'})" :icon-src="UserIcon">Deliveries</ActionButton>
+        <ActionButton v-if="'Admitted' !== patient.current_status" :icon-src="UserIcon" @click="showAdmitPatientPopup">Admit patient</ActionButton>
         <ActionButton v-if="'Admitted' === patient.current_status" :icon-src="UserIcon" @click="showDischargePatientPopup">Discharge patient</ActionButton>
         <ActionButton :icon-src="UserIcon" @click="showAppointmentPopup">Initiate appointment</ActionButton>
         <ActionButton v-on:click="() => $router.push({name: 'patient-history'})" :icon-src="UserIcon">Patient History</ActionButton>

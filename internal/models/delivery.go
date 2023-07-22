@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/onumahkalusamuel/hospital-app/config"
+	"github.com/onumahkalusamuel/hospital-app/pkg"
 )
 
 type Delivery struct {
@@ -13,8 +14,7 @@ type Delivery struct {
 	DeliveryDateTime *time.Time `gorm:"default:null" json:"delivery_date_time"`
 	DeliveryMode     string     `gorm:"default:'vaginal'" json:"delivery_mode"`
 	BabySex          string     `gorm:"not null" json:"baby_sex"`
-	BabyWeight       uint       `gorm:"default:0" json:"baby_weight"`
-	BabyWeightUnit   string     `gorm:"default:'kg'" json:"baby_weight_unit"`
+	BabyWeight       string     `gorm:"default:'0'" json:"baby_weight"`
 	Condition        string     `gorm:"default:null" json:"condition"`
 	Note             string     `gorm:"default:null" json:"note"`
 	Patient          *Patient   `json:"patient"`
@@ -48,4 +48,20 @@ func (m *Delivery) ReadAll() (bool, []Delivery) {
 		return false, Deliverys
 	}
 	return true, Deliverys
+}
+
+func (cg *Delivery) List(pagination pkg.Pagination, preloads []string) (*pkg.Pagination, error) {
+	var deliveries []*Delivery
+
+	db := config.DB.Scopes(Paginate(deliveries, &pagination, config.DB))
+	if len(preloads) > 0 {
+		for _, v := range preloads {
+			db.Preload(v)
+		}
+	}
+
+	db.Find(&deliveries)
+	pagination.Rows = deliveries
+
+	return &pagination, nil
 }

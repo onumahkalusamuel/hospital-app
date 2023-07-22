@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import apiRequest from '../../../../services/http/api-requests';
-import PopUp from '../../../../components/PopUp.vue';
-import { toasts, popupStore } from '../../../../stores';
-import TextField from '../../../../components/form/TextField.vue';
-import TextArea from '../../../../components/form/TextArea.vue';
-import PrimaryButton from '../../../../components/form/PrimaryButton.vue';
-import SecondaryButton from '../../../../components/form/SecondaryButton.vue';
+import apiRequest from '@/services/http/api-requests';
+import PopUp from '@/components/PopUp.vue';
+import { toasts, popupStore } from '@/stores';
+import TextField from '@/components/form/TextField.vue';
+import TextArea from '@/components/form/TextArea.vue';
+import PrimaryButton from '@/components/form/PrimaryButton.vue';
+import SecondaryButton from '@/components/form/SecondaryButton.vue';
 
 defineProps<{ popupId: string }>()
 const admitPatientRef = ref(null);

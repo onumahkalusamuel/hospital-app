@@ -21,7 +21,7 @@ func Delete(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "Cannot delete the Super Admin"})
 	}
 
-	if staff.Firstname == "" {
+	if staff.Username == "" {
 		return c.JSON(http.StatusNotFound, echo.Map{"message": "account not found"})
 	}
 

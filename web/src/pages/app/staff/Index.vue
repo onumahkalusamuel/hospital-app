@@ -1,21 +1,34 @@
 <script lang="ts" setup>
-import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumbs.vue';
-import ActionButton from '../../../components/ActionButton.vue';
-import PageHeader from '../../../components/PageHeader.vue';
-import apiRequest from '../../../services/http/api-requests';
-import { Staff, Roles } from '../../../interfaces'
-import TextField from '../../../components/form/TextField.vue';
-import { UsersIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/vue/24/solid';
-import { onMounted, ref } from 'vue';
+import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumbs.vue';
+import ActionButton from '@/components/ActionButton.vue';
+import PageHeader from '@/components/PageHeader.vue';
+import apiRequest from '@/services/http/api-requests';
+import { Staff, Roles, Pagination } from '@/interfaces'
+import TextField from '@/components/form/TextField.vue';
+import { UserIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { onMounted, ref, watch } from 'vue';
 import dayjs from 'dayjs';
-import { toasts } from '../../../stores/toasts';
+import { toasts } from '@/stores/toasts';
+import Paging from '@/components/Paging.vue';
+import { useDebounce } from '@/utils/debounce';
+const debounce = useDebounce()
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
   { title: "Staff", current: true },
 ] as BreadcrumbItem[]);
 
-const staff = ref([] as Staff[]);
+const pagination = ref({
+  limit: 10,
+  page: 1,
+  rows: [] as Staff[],
+  sort_key: '',
+  sort_order: 'desc',
+  total_pages: 0,
+  total_rows: 0,
+  query: ''
+} as Pagination);
+
 
 const deletItem = async (id: string)  => {
   const del = await apiRequest.deleteRecord(`staff/${id}`);
@@ -24,23 +37,29 @@ const deletItem = async (id: string)  => {
 }
 
 const fetchStaff =async () => {
-  staff.value = await apiRequest.get('staff');  
+  debounce(async () => {
+    const filter = {...pagination.value, rows: null };
+    pagination.value = await apiRequest.get(`staff?${new URLSearchParams(filter as never as Record<string, string>)}`);
+  });
 }
 
 onMounted(async() => {fetchStaff()})
+watch(() => pagination.value.limit, fetchStaff);
+watch(() => pagination.value.page, fetchStaff);
+watch(() => pagination.value.query, fetchStaff);
 </script>;
 
 <template>
   <div class="page-wrapper">
     <Breadcrumbs :items="breadcrumbs"></Breadcrumbs>
-    <PageHeader title="Staff" subtitle="Manage staff" :icon-src="UsersIcon">
+    <PageHeader title="Staff" subtitle="Manage staff" :icon-src="UserIcon">
     </PageHeader>
-    <div style="padding: 0 15px; display: flex; justify-content: space-between; border-top:1px solid #333">
+    <div class="px-[15px] flex justify-between border-t-[1px] border-[#333] py-2">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'add-staff'})" :icon-src="TrashIcon">Add staff</ActionButton>
+        <ActionButton v-on:click="() => $router.push({name: 'add-staff'})" :icon-src="UserIcon">Add staff</ActionButton>
       </div>
       <div>
-        <TextField name="" placeholder="Search">
+        <TextField placeholder="Search" v-model="pagination.query">
           <template #prepend>
             <MagnifyingGlassIcon class="h-5 w-5" />
           </template>
@@ -50,7 +69,7 @@ onMounted(async() => {fetchStaff()})
 
     <hr class="ml-4 mr-4" />
     <div class="page-scroll-area">
-      <div v-if="!staff.length">
+      <div v-if="!pagination.rows.length">
         <div class="text-center mt-4 mb-4 pt-4">No records found</div>
         <hr/>
       </div>
@@ -64,14 +83,14 @@ onMounted(async() => {fetchStaff()})
           <div class="cell-data">Actions</div>
         </div>
         <div class="table-body">
-          <div class="table-row" v-for="st, i in staff" :key="st.id">
+          <div class="table-row" v-for="st, i in pagination.rows" :key="st.id">
             <div class="cell-data cell-sn">{{ i + 1 }}</div>
             <div class="cell-data cell-size-1">
               <router-link class="text-blue-600 hover:underline" :to="{name: 'view-staff', params: { id: st.id }}">
                 {{ `${st.firstname} ${st.lastname}` }}
               </router-link>
             </div>
-            <div class="cell-data">{{ Roles[st.role] }}</div>
+            <div class="cell-data">{{ Roles[st.role as 1|2|3] }}</div>
             <div class="cell-data">{{ st.username }}</div>
             <div class="cell-data cell-size-1">{{ dayjs(st.created_at).format('DD-MM-YYYY hh:mm A') }}</div>
             <div class="cell-data">
@@ -81,8 +100,6 @@ onMounted(async() => {fetchStaff()})
         </div>
       </div>
     </div>
+    <Paging v-model="pagination" />
   </div>
 </template>
-
-<style scoped>
-</style>

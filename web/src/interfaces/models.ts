@@ -44,7 +44,6 @@ export interface Delivery {
   delivery_mode: string;
   baby_sex: string;
   baby_weight: number;
-  baby_weight_unit: string;
   condition: string;
   note: string;
   patient?: Patient;
@@ -60,16 +59,22 @@ export interface Appointment {
 
 export interface Invoice {
   id: string;
+  name: string;
+  billing_address: string;
+  invoice_number: string;
+  invoice_date: string;
+  due_date: string;
+  details: InvoiceDetails[];
   patient_id: string;
-  details: InvoiceDetials[];
   amount: number;
   balance: number;
   completed: number;
+  discount: number;
   payments?: Payment[];
   patient?: Patient;
 }
 
-export interface InvoiceDetials {
+export interface InvoiceDetails {
   description: string;
   qty: number;
   unit: string;
@@ -95,7 +100,7 @@ export interface PatientHistory {
   date_time: string;
   type: PatientHistoryTypes;
   details: { [key: string]: any; };
-  patient?: Patient
+  patient?: Patient;
 }
 
 export interface Settings {
@@ -115,4 +120,16 @@ export interface Staff {
   role: RoleTypes;
   username: string;
   password?: string;
+}
+
+
+export interface Pagination {
+  limit: number;
+  page: number;
+  rows: any[];
+  sort_key: string;
+  sort_order: "asc" | "desc";
+  total_pages: number;
+  total_rows: number;
+  query: '';
 }

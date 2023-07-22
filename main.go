@@ -54,6 +54,7 @@ func main() {
 	unauthApi.POST("/activate", api.Activate)
 	unauthApi.POST("/create-admin", api.CreateAdmin)
 	unauthApi.POST("/hospital-setup", api.HospitalSetup)
+	unauthApi.POST("/hospital-update", api.HospitalUpdate)
 	unauthApi.GET("/hospital-details", api.HospitalDetails)
 	unauthApi.GET("/installation-code", api.InstallationCode)
 
@@ -62,7 +63,7 @@ func main() {
 	authApi := e.Group("/api", middleware.ActivationAndInitialSetup(), echojwt.JWT([]byte(config.JwtSecret)), middleware.AppendJwtClaims())
 	// profile actions
 	authApi.GET("/profile", staff.ReadProfile)
-	authApi.PUT("/profile", staff.UpdatePassword)
+	authApi.PUT("/profile", staff.UpdateProfile)
 	// staff crud
 	authApi.GET("/staff", staff.ReadAll)
 	authApi.POST("/staff", staff.Create)

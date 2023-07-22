@@ -1,12 +1,14 @@
 import { reactive } from 'vue';
 
-type Keys = 'hospital_name' | 'hospital_address' | 'hospital_logo';
+type Keys = 'hospital_name' | 'hospital_address' | 'hospital_logo' | 'hospital_email' | 'hospital_phone';
 type Data = { [key: string]: any; };
 
 export const hospital = reactive({
   hospital_name: '',
   hospital_address: '',
   hospital_logo: '',
+  hospital_email: '',
+  hospital_phone: '',
   setAll (data: Data) {
     (Object.keys(data) as Keys[]).forEach((key) => {
       this[key] = data[key];
