@@ -4,7 +4,7 @@ import { auth } from '@/stores/auth';
 import { toasts } from '@/stores/toasts';
 
 // axios instance
-let __api = axios.create({ baseURL: `http://${window.location.hostname}:8080/api/`, proxy: false });
+let __api = axios.create({ baseURL: `http://${window.location.hostname}:8788/api/`, proxy: false });
 if (!window.location.hostname.match(/localhost|192.*|127.*|0.*/)) {
   __api = axios.create({ baseURL: `https://${window.location.hostname}/api/`, proxy: false });
 }
