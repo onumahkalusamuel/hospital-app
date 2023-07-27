@@ -17,11 +17,11 @@ OutputDir=userdocs:HCMS
 [Files]
 Source: "hcms.exe"; DestDir: "{app}"
 Source: "applauncher.exe"; DestDir: "{app}"
-Source: "bookieguard.ico"; DestDir: "{app}"
+Source: "hcms.ico"; DestDir: "{app}"
 
 [Icons]
-Name: "{userdesktop}\Hospital Card Mgmt. System"; Filename: "{app}\applauncher.exe"; IconFilename: "{app}\bookieguard.ico"
-Name: "{group}\Hospital Card Mgmt. System"; Filename: "{app}\applauncher.exe"; IconFilename: "{app}\bookieguard.ico"
+Name: "{userdesktop}\Hospital Card Mgmt. System"; Filename: "{app}\applauncher.exe"; IconFilename: "{app}\hcms.ico"
+Name: "{group}\Hospital Card Mgmt. System"; Filename: "{app}\applauncher.exe"; IconFilename: "{app}\hcms.ico"
 
 [Run]
 Filename: {sys}\sc.exe; Parameters: "create HcmsSvc start= auto type= share binPath= ""{app}\hcms.exe"" DisplayName= ""HCMS"""; Flags: runhidden
