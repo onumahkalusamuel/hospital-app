@@ -1,48 +1,54 @@
-<script lang="ts" >
+<script lang="ts" setup>
 import PrimaryButton from '@/components/form/PrimaryButton.vue';
 import TextField from '@/components/form/TextField.vue';
 import apiRequest from '@/services/http/api-requests';
 import { auth } from '@/stores/auth';
 import { toasts } from '@/stores/toasts';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { XCircleIcon } from '@heroicons/vue/24/outline';
 
-export default {
-    name: "Login",
-    data: () => ({
-        hospital_name: "",
-        hospital_address: "",
-        hospital_logo: ""
-    }),
-    async mounted() {
-        auth.setJwt("");
-        try {
-            const req = await apiRequest.get("hospital-details");
-            if (req) {
-                this.hospital_name = req.hospital_name;
-                this.hospital_address = req.hospital_address;
-                this.hospital_logo = req.hospital_logo;
-            }
-        }
-        catch (e) {
-            console.log(e);
-        }
-    },
-    methods: {
-        async login() {
-            const formData = new FormData(this.$refs.login as HTMLFormElement);
-            const login = await apiRequest.post("login", Object.fromEntries(formData.entries()));
-            if (login.message) {
-                auth.setJwt(login.jwt);
-                toasts.addToast({ message: 'Login successful', title: 'Success', type: 'success' })
-                this.$router.push({ name: "dashboard" });
-            }
-        }
-    },
-    components: { TextField, PrimaryButton }
-}; </script>;
+const hospital_name = ref('');
+const hospital_address = ref('');
+const hospital_logo = ref('');
+const loginForm = ref(null);
+const router = useRouter();
+
+onMounted(async () => {
+  auth.setJwt("");
+  try {
+      const req = await apiRequest.get("hospital-details");
+      if (req) {
+          hospital_name.value = req.hospital_name;
+          hospital_address.value = req.hospital_address;
+          hospital_logo.value = req.hospital_logo;
+      }
+  }
+  catch (e) {
+      console.log(e);
+  }
+})
+
+const exitApp = () => window.close();
+
+const login = async () => {
+  const formData = new FormData(loginForm.value as never as HTMLFormElement);
+  const login = await apiRequest.post("login", Object.fromEntries(formData.entries()));
+  if (login.message) {
+    auth.setJwt(login.jwt);
+    toasts.addToast({ message: 'Login successful', title: 'Success', type: 'success' })
+    router.push({ name: "dashboard" });
+  }
+}
+</script>;
 
 <template>
   <div class="h-screen flex flex-col sm:flex-row">
-    <div class="bg-[url('/hospital-image.png')] bg-cover bg-no-repeat flex-1"></div>
+    <div class="bg-[url('/hospital-image.png')] bg-cover bg-no-repeat flex-1">
+      <div @click="exitApp" class="fixed left-[10px] top-[10px] cursor-pointer text-center flex flex-col items-center p-2 hover:bg-stone-700 bg-stone-900 text-white">
+      <XCircleIcon class="w-8 h-8" /> EXIT
+    </div>
+    </div>
     <div class="p-5 flex flex-col w-[400px] min-h-[85vh] justify-between mx-auto sm:py-10">
       <div class="flex justify-between items-center">
         <div class="w-full">
@@ -55,7 +61,7 @@ export default {
       </div>
       <div class="form-proper">
         <p class="text-xl mt-10 mb-4">Login to continue</p>
-        <form v-on:submit.prevent="login" ref="login" autocomplete="off">
+        <form v-on:submit.prevent="login" ref="loginForm" autocomplete="off">
           <TextField class="mb-2" name="username" placeholder="Username" required/>
           <TextField class="mb-2" name="password" placeholder="Password" type="password" required />
           <PrimaryButton type="submit">Login</PrimaryButton>

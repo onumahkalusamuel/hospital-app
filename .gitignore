@@ -1,6 +1,5 @@
 *.db
 .env
-app
 *.appdb
 *.exe
 !applauncher.exe
