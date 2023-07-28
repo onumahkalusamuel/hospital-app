@@ -10,7 +10,7 @@ import (
 type PatientHistory struct {
 	BaseModel
 	StaffID   string                 `gorm:"not null;references:staffs(id)" json:"-"`
-	PatientID string                 `gorm:"not null;references:patients(id)"  json:"-"`
+	PatientID string                 `gorm:"not null;references:patients(id)" json:"-"`
 	Date      *time.Time             `gorm:"default:null" json:"date_time"`
 	Type      string                 `gorm:"not null" json:"type"`
 	Details   map[string]interface{} `gorm:"serializer:json" json:"details"`
@@ -71,11 +71,9 @@ func (m *PatientHistory) ReadAll() (bool, []PatientHistory) {
 	return true, PatientHistorys
 }
 
-func (cg *PatientHistory) List(pagination pkg.Pagination) (*pkg.Pagination, error) {
+func (m *PatientHistory) List(pagination pkg.Pagination, ph *PatientHistory) (*pkg.Pagination, error) {
 	var records []*PatientHistory
-
-	config.DB.Scopes(Paginate(records, &pagination, config.DB)).Find(&records)
+	config.DB.Scopes(Paginate(ph, &pagination, config.DB)).Find(&records, ph)
 	pagination.Rows = records
-
 	return &pagination, nil
 }

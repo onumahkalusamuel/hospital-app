@@ -62,6 +62,7 @@ func WebServer() {
 	// patient history
 	authApi.GET("/patients/:patient_id/patient-history", patient.PatientHistory)
 	authApi.POST("/patients/:patient_id/patient-history", patient.PatientHistoryCreate)
+	authApi.POST("/patients/:patient_id/patient-history/all", patient.PatientHistoryAll)
 	authApi.GET("/patients/:patient_id/patient-history/:history_id", patient.PatientHistoryReadOne)
 	authApi.PUT("/patients/:patient_id/patient-history/:history_id", patient.PatientHistoryUpdate)
 	authApi.DELETE("/patients/:patient_id/patient-history/:history_id", patient.PatientHistoryDelete)

@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumbs.vue';
-import PageHeader from '../../../components/PageHeader.vue';
-import apiRequest from '../../../services/http/api-requests';
+import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumbs.vue';
+import PageHeader from '@/components/PageHeader.vue';
+import apiRequest from '@/services/http/api-requests';
 import dayjs from 'dayjs'
-import TextField from '../../../components/form/TextField.vue'
-import PrimaryButton from '../../../components/form/PrimaryButton.vue';
-import SecondaryButton from '../../../components/form/SecondaryButton.vue';
+import TextField from '@/components/form/TextField.vue'
+import PrimaryButton from '@/components/form/PrimaryButton.vue';
+import SecondaryButton from '@/components/form/SecondaryButton.vue';
 import { onMounted, ref } from 'vue';
-import { router } from '../../../router';
+import { router } from '@/router';
 import { UserPlusIcon } from '@heroicons/vue/24/outline';
-import { toasts } from '../../../stores/toasts';
-import { Patient, PatientHistory } from '../../../interfaces';
+import { toasts } from '@/stores/toasts';
+import { Patient, PatientHistory } from '@/interfaces';
 import { useRoute } from 'vue-router';
 import HistoryForm from './history/HistoryForm.vue';
 // history parts

@@ -18,6 +18,7 @@ import ViewPatient from '@/pages/app/patients/View.vue';
 import NextOfKin from '@/pages/app/patients/NextOfKin.vue';
 import PatientHistory from '@/pages/app/patients/HistoryIndex.vue';
 import PatientHistoryAdd from '@/pages/app/patients/HistoryAdd.vue';
+import PatientHistoryPrintView from '@/pages/app/patients/HistoryPrintView.vue';
 import PatientHistoryView from '@/pages/app/patients/HistoryView.vue';
 
 import Deliveries from '@/pages/app/deliveries/Index.vue';
@@ -50,6 +51,7 @@ export const routes: RouteRecordRaw[] = [
     ]
   },
   { path: '/login', component: Login, name: 'login' },
+  { path: '/app/patients/:id/patient-history/print', component: PatientHistoryPrintView, name: 'patient-history-print-view' },
   {
     path: '/app/', component: AppLayout, beforeEnter: appGuard, children: [
       { path: 'dashboard', component: Dashboard, name: 'dashboard' },

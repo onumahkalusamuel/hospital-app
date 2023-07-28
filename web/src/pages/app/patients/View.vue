@@ -98,10 +98,10 @@ onMounted(async() => { await fetchPatient()});
       <div class="flex gap-2">
         <ActionButton dark v-on:click="() => $router.push({name: 'next-of-kin'})" :icon-src="UserIcon">Next of kin</ActionButton>
         <ActionButton dark v-on:click="() => $router.push({name: 'add-patient'})" :icon-src="UserIcon">Deliveries</ActionButton>
-        <ActionButton v-if="'Admitted' !== patient.current_status" :icon-src="UserIcon" @click="showAdmitPatientPopup">Admit patient</ActionButton>
-        <ActionButton v-if="'Admitted' === patient.current_status" :icon-src="UserIcon" @click="showDischargePatientPopup">Discharge patient</ActionButton>
-        <ActionButton :icon-src="UserIcon" @click="showAppointmentPopup">Initiate appointment</ActionButton>
-        <ActionButton v-on:click="() => $router.push({name: 'patient-history'})" :icon-src="UserIcon">Patient History</ActionButton>
+        <ActionButton dark v-if="'Admitted' !== patient.current_status" :icon-src="UserIcon" @click="showAdmitPatientPopup">Admit patient</ActionButton>
+        <ActionButton dark v-if="'Admitted' === patient.current_status" :icon-src="UserIcon" @click="showDischargePatientPopup">Discharge patient</ActionButton>
+        <ActionButton dark :icon-src="UserIcon" @click="showAppointmentPopup">Initiate appointment</ActionButton>
+        <ActionButton dark v-on:click="() => $router.push({name: 'patient-history'})" :icon-src="UserIcon">Patient History</ActionButton>
         <!-- <ActionButton :icon-src="UserIcon">Reports</ActionButton> -->
       </div>
     </div>

@@ -1,4 +1,4 @@
-export type PatientHistoryTypes = 'payment' | "invoice" | "note" | "admit" | "discharge" | "history"
-  | "examination" | "test" | "diagnosis" | "treatment" | "prescription";
+export type PatientHistoryTypes = 'Admission' |'Payment' | "Invoice" | "Note" | "Admit" | "Discharge" | "History"
+  | "examination" | "Test" | "Diagnosis" | "Treatment" | "Prescription" | "Appointment";
 
 export type RoleTypes = 1 | 2 | 3;
