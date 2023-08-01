@@ -12,11 +12,9 @@ const (
 )
 
 var (
-	DB               *gorm.DB
-	HashedID, err    = machineid.ProtectedID(AppKey)
-	ActivationCode   = ""
-	PaystackCurrency = "NGN"
-	PaystackChannels = []string{"card", "bank", "ussd", "qr", "bank_transfer"}
+	DB             *gorm.DB
+	HashedID, err  = machineid.ProtectedID(AppKey)
+	ActivationCode = ""
 )
 
 // initial db settings
@@ -38,11 +36,5 @@ const (
 	DOCTOR_ROLE
 	NURSE_ROLE
 )
-
-type PaystackMetaData struct {
-	BlockGroupID     string
-	UserID           string
-	PaymentReference string
-}
 
 type BodyStructure map[string]string

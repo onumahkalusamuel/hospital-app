@@ -28,35 +28,35 @@ onMounted(async () => {
     <header class="w-full flex toolbar bg-[#0078d4] h-[40px]">
       <div class="flex items-center text-white">
         <router-link class="header-icon-link font-bold text-[14px] px-3 hover:bg-[#1664a7]" :to="{name: 'dashboard'}">
-          <SparklesIcon class="text-white h-6 w-6 mr-2" />
-          {{ hospital.get('hospital_name') }}
+          <SparklesIcon class="text-white h-6 w-6" />
+          <span class="pl-2 hidden lg:block">{{ hospital.get('hospital_name') }}</span>
         </router-link>
       </div>
       <div class="search-container flex items-center flex-1 justify-center font-bold uppercase">
         
         <router-link :class="$route.name == 'staff'? 'bg-[#00000033]':''" :to="{name:'staff'}" class="header-icon-link px-3" v-if="user.role == '1'">
-          <UserIcon class="text-white h-5 w-5 mr-2"/>
-          <span>Staff</span>
+          <UserIcon class="text-white h-5 w-5"/>
+          <span class="pl-2 hidden lg:block">Staff</span>
         </router-link>
 
         <router-link :class="$route.name == 'patients'? 'bg-[#00000033]':''" :to="{name:'patients'}" class="header-icon-link px-3">
-          <UsersIcon class="text-white h-5 w-5 mr-2"/>
-          <span>Patients</span>
+          <UsersIcon class="text-white h-5 w-5"/>
+          <span class="pl-2 hidden lg:block">Patients</span>
         </router-link>
 
         <router-link :class="$route.name == 'deliveries'? 'bg-[#00000033]':''" :to="{name:'deliveries'}" class="header-icon-link px-3">
-          <UserGroupIcon class="text-white h-5 w-5 mr-2"/>
-          <span>Deliveries</span>
+          <UserGroupIcon class="text-white h-5 w-5"/>
+          <span class="pl-2 hidden lg:block">Deliveries</span>
         </router-link>
 
         <router-link :class="$route.name == 'billings'? 'bg-[#00000033]':''" :to="{name:'billings'}" class="header-icon-link px-3">
-          <BanknotesIcon class="text-white h-5 w-5 mr-2"/>
-          <span>Billings</span>
+          <BanknotesIcon class="text-white h-5 w-5"/>
+          <span class="pl-2 hidden lg:block">Billings</span>
         </router-link>
 
         <router-link :class="$route.name == 'reports'? 'bg-[#00000033]':''" :to="{name:'reports'}" class="header-icon-link px-3 font-bold">
-          <QueueListIcon class="text-white h-5 w-5 mr-2"/>
-          <span>REPORTS</span>
+          <QueueListIcon class="text-white h-5 w-5"/>
+          <span class="pl-2 hidden lg:block">Reports</span>
         </router-link>
 
       </div>
@@ -65,14 +65,14 @@ onMounted(async () => {
           <cog8-tooth-icon class="text-white h-5 w-5"/>
         </router-link>
       </div>
-      <a class="header-icon-link hover:bg-[#1664a7]">
+      <!-- <a class="header-icon-link hover:bg-[#1664a7]">
         <div class="flex flex-col text-right px-3">
           <div class="avatarmenu-username">[{{ user.get('username') }}]</div>
         </div>
-      </a>
-      <a class="header-icon-link px-3" @click="() => {auth.setJwt(''); user.reset(); $router.push({name:'login'});}">
+      </a> -->
+      <a title="Logout" class="header-icon-link px-3" @click="() => {auth.setJwt(''); user.reset(); $router.push({name:'login'});}">
         <lock-closed-icon class="text-white h-5 w-5 mr-2"/>
-        <span>Logout</span>
+        <span class="hidden lg:block">Logout</span>
       </a>
     </header>
     <main class="flex-1 flex-scroll">

@@ -53,10 +53,10 @@ watch(() => pagination.value.query, fetch);
     <Breadcrumbs :items="breadcrumbs"></Breadcrumbs>
     <PageHeader title="Deliveries" subtitle="Manage deliveries" :icon-src="UserGroupIcon" />
     <div class="px-[15px] flex justify-between border-t-[1px] border-[#333] py-2">
-      <div>
+      <div class="pr-2">
         <ActionButton dark @click="() => $router.push({name: 'add-delivery'})" :icon-src="UserPlusIcon">Add delivery</ActionButton>
       </div>
-      <div>
+      <div class="flex">
         <TextField placeholder="Search" v-model="pagination.query">
           <template #prepend>
             <MagnifyingGlassIcon class="h-5 w-5" />

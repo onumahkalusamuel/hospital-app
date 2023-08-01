@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chenfengyuan/vue-qrcode": "2",
     "@heroicons/vue": "^2.0.18",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.8",
     "html2pdf.js": "^0.10.1",
     "lodash-es": "^4.17.21",
+    "qrcode": "1",
     "uuid": "^9.0.0",
     "vue": "^3.2.47",
     "vue-router": "4"

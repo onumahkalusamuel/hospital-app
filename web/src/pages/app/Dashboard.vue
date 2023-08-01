@@ -14,7 +14,7 @@ const links = ref([
 
 <template>
   <div class="p-[15px]">
-    <div class="dashboard-title">Welcome, {{ user.role > '1' ? (user.role == '2' ? 'Dr.': 'Nrs.'): '' }} {{ user.lastname }} {{ user.firstname }}</div>
+    <div class="pt-[50px] pb-[20px] text-xl">Welcome, {{ user.role > '1' ? (user.role == '2' ? 'Dr.': 'Nrs.'): '' }} {{ user.lastname }} {{ user.firstname }}</div>
     <hr/>
     <div class="flex flex-wrap justify-around">
       <router-link v-if="user.role == '1'" class="hover:bg-[azure] dashboard-body-item" :to="{name: 'staff'}">
@@ -34,10 +34,7 @@ const links = ref([
 </template>
 <style scoped>
 
-.dashboard-title {
-  font-size: 2rem;
-  padding: 80px 0 20px 0;
-}
+
 .dashboard-body-item {
   width: 212px;
   height: 259px;

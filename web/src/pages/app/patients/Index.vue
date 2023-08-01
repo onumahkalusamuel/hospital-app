@@ -53,10 +53,10 @@ watch(() => pagination.value.query, fetchPatients);
     <PageHeader title="Patients" subtitle="Manage patients" :icon-src="UsersIcon">
     </PageHeader>
     <div class="px-[15px] flex justify-between border-t-[1px] border-[#333] py-2">
-      <div>
+      <div class="pr-2">
         <ActionButton dark @click="() => $router.push({name: 'add-patient'})" :icon-src="UserPlusIcon">Add patient</ActionButton>
       </div>
-      <div>
+      <div class="flex">
         <TextField placeholder="Search" v-model="pagination.query">
           <template #prepend>
             <MagnifyingGlassIcon class="h-5 w-5" />

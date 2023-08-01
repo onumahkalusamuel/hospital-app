@@ -42,6 +42,8 @@ func WebServer() {
 
 	unauthApi.POST("/get-activation-code", api.GetActivationCode) // move endpoint to server when done
 
+	unauthApi.GET("/get-remote-address", api.GetRemoteAddress)
+
 	authApi := e.Group("/api", middleware.ActivationAndInitialSetup(), echojwt.JWT([]byte(config.JwtSecret)), middleware.AppendJwtClaims())
 	// profile actions
 	authApi.GET("/profile", staff.ReadProfile)

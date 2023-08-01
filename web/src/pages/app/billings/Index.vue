@@ -55,10 +55,10 @@ watch(() => pagination.value.query, fetchInvoices);
     <PageHeader title="Billings" subtitle="Manage billings" :icon-src="BanknotesIcon">
     </PageHeader>
     <div class="px-[15px] flex justify-between border-t-[1px] border-[#333] py-2">
-      <div>
+      <div class="pr-2">
         <ActionButton dark v-on:click="() => $router.push({name: 'add-invoice'})" :icon-src="PlusIcon">Add invoice</ActionButton>
       </div>
-      <div>
+      <div class="flex">
         <TextField placeholder="Search" v-model="pagination.query">
           <template #prepend>
             <MagnifyingGlassIcon class="h-5 w-5" />

@@ -15,6 +15,7 @@ func main() {
 		Description: "Hospital Card Management System",
 	}
 	runAsService(svcConfig, func() {
+
 		go internal.WebServer()
 	})
 }

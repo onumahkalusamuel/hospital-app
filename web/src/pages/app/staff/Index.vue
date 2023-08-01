@@ -55,10 +55,10 @@ watch(() => pagination.value.query, fetchStaff);
     <PageHeader title="Staff" subtitle="Manage staff" :icon-src="UserIcon">
     </PageHeader>
     <div class="px-[15px] flex justify-between border-t-[1px] border-[#333] py-2">
-      <div>
-        <ActionButton dark v-on:click="() => $router.push({name: 'add-staff'})" :icon-src="UserPlusIcon">Add staff</ActionButton>
+      <div class="pr-2">
+        <ActionButton dark @click="() => $router.push({name: 'add-staff'})" :icon-src="UserPlusIcon">Add staff</ActionButton>
       </div>
-      <div>
+      <div class="flex">
         <TextField placeholder="Search" v-model="pagination.query">
           <template #prepend>
             <MagnifyingGlassIcon class="h-5 w-5" />
