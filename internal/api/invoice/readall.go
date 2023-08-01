@@ -4,28 +4,21 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/onumahkalusamuel/hospital-app/config"
 	"github.com/onumahkalusamuel/hospital-app/internal/models"
+	"github.com/onumahkalusamuel/hospital-app/pkg"
 )
 
 func ReadAll(c echo.Context) error {
-	var invoices []models.Invoice
 
-	db := config.DB.Model(&models.Invoice{})
-
-	if balance := c.QueryParam("balance"); balance == "true" {
-		db.Where("balance > 0")
-	} else if balance == "false" {
-		db.Where("balance == 0")
-	} else {
-		db.Order("balance DESC, created_at ASC")
-	}
-
+	p := models.Invoice{}
 	if patient_id := c.QueryParam("patient_id"); patient_id != "" {
-		db.Where("patient_id = '" + patient_id + "'")
+		p.PatientID = patient_id
 	}
 
-	db.Preload("Patient").Find(&invoices)
+	pag, err := p.List(pkg.GrabFromContext(pkg.Pagination{}, c), &p)
+	if err != nil {
+		panic(err)
+	}
 
-	return c.JSON(http.StatusOK, invoices)
+	return c.JSON(http.StatusOK, pag)
 }

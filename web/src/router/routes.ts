@@ -29,16 +29,11 @@ import Staff from '@/pages/app/staff/Index.vue';
 import AddStaff from '@/pages/app/staff/Add.vue';
 import ViewStaff from '@/pages/app/staff/View.vue';
 
-import Invoices from '@/pages/app/invoices/Index.vue';
-import AddInvoice from '@/pages/app/invoices/Add.vue';
-import ViewInvoice from '@/pages/app/invoices/View.vue';
-import InvoicePayment from '@/pages/app/invoices/PaymentIndex.vue';
-import InvoicePaymentAdd from '@/pages/app/invoices/PaymentAdd.vue';
-import InvoicePaymentView from '@/pages/app/invoices/PaymentView.vue';
+import Invoices from '@/pages/app/billings/Index.vue';
+import AddInvoice from '@/pages/app/billings/Add.vue';
+import ViewInvoice from '@/pages/app/billings/View.vue';
 
-
-import Billings from '@/pages/app/staff/Index.vue';
-import Reports from '@/pages/app/staff/Index.vue';
+import Reports from '@/pages/app/reports/Index.vue';
 
 
 export const routes: RouteRecordRaw[] = [
@@ -72,14 +67,9 @@ export const routes: RouteRecordRaw[] = [
       { path: 'staff/add', component: AddStaff, name: 'add-staff' },
       { path: 'staff/:id', component: ViewStaff, name: 'view-staff' },
 
-      { path: 'invoices', component: Invoices, name: 'invoices' },
-      { path: 'invoices/add', component: AddInvoice, name: 'add-invoice' },
-      { path: 'invoices/:id', component: ViewInvoice, name: 'view-invoice' },
-      { path: 'invoices/:id/payments', component: InvoicePayment, name: 'payments' },
-      { path: 'invoices/:id/payments/add', component: InvoicePaymentAdd, name: 'payments-add' },
-      { path: 'invoices/:id/payments/:hid', component: InvoicePaymentView, name: 'payments-view' },
-      
-      { path: 'billings', component: Billings, name: 'billings' },
+      { path: 'billings', component: Invoices, name: 'billings' },
+      { path: 'billings/add', component: AddInvoice, name: 'add-invoice' },
+      { path: 'billings/:id', component: ViewInvoice, name: 'view-invoice' },
 
       { path: 'reports', component: Reports, name: 'reports' },
 

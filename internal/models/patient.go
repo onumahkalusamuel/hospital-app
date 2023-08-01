@@ -73,6 +73,11 @@ func (m *Patient) ReadAll() (bool, []Patient) {
 }
 
 func (u *Patient) AfterCreate(tx *gorm.DB) (err error) {
+
+	if u.CardNo != "" {
+		return nil
+	}
+
 	s := Settings{Setting: "last_card_no"}
 	s.Read()
 	lastNo, _ := strconv.Atoi(s.Value)

@@ -5,7 +5,7 @@ import PageHeader from '@/components/PageHeader.vue';
 import apiRequest from '@/services/http/api-requests';
 import { Patient, Pagination } from '@/interfaces'
 import TextField from '@/components/form/TextField.vue';
-import { UsersIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { UsersIcon, MagnifyingGlassIcon, TrashIcon, UserPlusIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref, watch } from 'vue';
 import { toasts } from '@/stores/toasts';
 import Paging from '@/components/Paging.vue';
@@ -54,7 +54,7 @@ watch(() => pagination.value.query, fetchPatients);
     </PageHeader>
     <div class="px-[15px] flex justify-between border-t-[1px] border-[#333] py-2">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'add-patient'})" :icon-src="UsersIcon">Add patient</ActionButton>
+        <ActionButton dark @click="() => $router.push({name: 'add-patient'})" :icon-src="UserPlusIcon">Add patient</ActionButton>
       </div>
       <div>
         <TextField placeholder="Search" v-model="pagination.query">

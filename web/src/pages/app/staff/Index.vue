@@ -5,7 +5,7 @@ import PageHeader from '@/components/PageHeader.vue';
 import apiRequest from '@/services/http/api-requests';
 import { Staff, Roles, Pagination } from '@/interfaces'
 import TextField from '@/components/form/TextField.vue';
-import { UserIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { UserPlusIcon, UserIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref, watch } from 'vue';
 import dayjs from 'dayjs';
 import { toasts } from '@/stores/toasts';
@@ -56,7 +56,7 @@ watch(() => pagination.value.query, fetchStaff);
     </PageHeader>
     <div class="px-[15px] flex justify-between border-t-[1px] border-[#333] py-2">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'add-staff'})" :icon-src="UserIcon">Add staff</ActionButton>
+        <ActionButton dark v-on:click="() => $router.push({name: 'add-staff'})" :icon-src="UserPlusIcon">Add staff</ActionButton>
       </div>
       <div>
         <TextField placeholder="Search" v-model="pagination.query">

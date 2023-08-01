@@ -3,9 +3,3 @@ export const Roles = {
   2: "Doctor",
   3: "Nurse"
 };
-
-export enum Samuel {
-  Admin,
-  Doctor,
-  Nurse,
-}

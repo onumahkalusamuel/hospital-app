@@ -5,17 +5,17 @@ import PageHeader from '@/components/PageHeader.vue';
 import apiRequest from '@/services/http/api-requests';
 import { Pagination, Invoice } from '@/interfaces'
 import TextField from '@/components/form/TextField.vue';
-import { UserIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { PlusIcon, MagnifyingGlassIcon, TrashIcon, BanknotesIcon } from '@heroicons/vue/24/solid';
 import { onMounted, ref, watch } from 'vue';
 import dayjs from 'dayjs';
-import { toasts } from '@/stores/toasts';
+import { user, toasts } from '@/stores';
 import Paging from '@/components/Paging.vue';
 import { useDebounce } from '@/utils/debounce';
 const debounce = useDebounce()
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
-  { title: "Invoices", current: true },
+  { title: "Billings", current: true },
 ] as BreadcrumbItem[]);
 
 const pagination = ref({
@@ -52,11 +52,11 @@ watch(() => pagination.value.query, fetchInvoices);
 <template>
   <div class="page-wrapper">
     <Breadcrumbs :items="breadcrumbs"></Breadcrumbs>
-    <PageHeader title="Invoices" subtitle="Manage billings" :icon-src="UserIcon">
+    <PageHeader title="Billings" subtitle="Manage billings" :icon-src="BanknotesIcon">
     </PageHeader>
     <div class="px-[15px] flex justify-between border-t-[1px] border-[#333] py-2">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'add-invoice'})" :icon-src="UserIcon">Add invoice</ActionButton>
+        <ActionButton dark v-on:click="() => $router.push({name: 'add-invoice'})" :icon-src="PlusIcon">Add invoice</ActionButton>
       </div>
       <div>
         <TextField placeholder="Search" v-model="pagination.query">
@@ -79,7 +79,7 @@ watch(() => pagination.value.query, fetchInvoices);
           <div class="cell-data cell-size-1">Name</div>
           <div class="cell-data">Amount</div>
           <div class="cell-data">Status</div>
-          <div class="cell-data">Due Date</div>
+          <div class="cell-data cell-size-1">Due Date</div>
           <div class="cell-data">Actions</div>
         </div>
         <div class="table-body">
@@ -90,11 +90,11 @@ watch(() => pagination.value.query, fetchInvoices);
                 {{ `${invoice.patient.firstname} ${invoice.patient.lastname}` }}
               </router-link>
             </div>
-            <div class="cell-data">{{ invoice.amount }}</div>
+            <div class="cell-data">{{ invoice.amount.toLocaleString("en-US") }}</div>
             <div class="cell-data">{{ invoice.completed ? 'paid' : 'pending' }}</div>
-            <div class="cell-data cell-size-1">{{ dayjs(invoice.created_at).format('DD-MM-YYYY hh:mm A') }}</div>
+            <div class="cell-data cell-size-1">{{ dayjs(invoice.due_date).format('DD-MM-YYYY hh:mm A') }}</div>
             <div class="cell-data">
-              <ActionButton v-if="invoice.role > 1" v-on:click="deletItem(invoice.id)" :icon-src="TrashIcon">Delete</ActionButton>
+              <ActionButton v-if="user.role == '1'" v-on:click="deletItem(invoice.id)" :icon-src="TrashIcon">Delete</ActionButton>
             </div>
           </div>
         </div>

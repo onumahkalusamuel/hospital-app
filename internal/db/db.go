@@ -40,4 +40,18 @@ func InitialData() {
 			s.Create()
 		}
 	}
+
+	// add guest customer
+	guest := &models.Patient{CardNo: "GUEST"}
+	guest.Read()
+	if guest.ID == "" {
+		guest.Title = "Mr"
+		guest.Lastname = "Guest"
+		guest.Firstname = "Patient"
+		guest.Address = "Address"
+		guest.Sex = "Male"
+		guest.Email = "guest@hospital.com"
+		config.DB.Model(&models.Patient{}).Save(guest)
+	}
+
 }

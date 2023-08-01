@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/onumahkalusamuel/hospital-app/config"
 	"github.com/onumahkalusamuel/hospital-app/pkg"
 	"gorm.io/gorm"
@@ -8,15 +10,22 @@ import (
 
 type Invoice struct {
 	BaseModel
-	DeletedAt gorm.DeletedAt   `gorm:"index" json:"-"`
-	StaffID   string           `gorm:"not null;references:staffs(id)" json:"-"`
-	PatientID string           `gorm:"not null;references:patients(id)" json:"patient_id"`
-	Details   []InvoiceDetails `gorm:"types:bytes;serializer:gob" json:"details"`
-	Amount    uint             `gorm:"not null" json:"amount"`
-	Balance   uint             `gorm:"default:0" json:"balance"`
-	Completed uint             `gorm:"default:0" json:"completed"`
-	Payments  []*Payment       `gorm:"constraint:onDelete:CASCADE" json:"payments"`
-	Patient   *Patient         `json:"patient"`
+	DeletedAt      gorm.DeletedAt   `gorm:"index" json:"-"`
+	StaffID        string           `gorm:"not null;references:staffs(id)" json:"-"`
+	PatientID      string           `gorm:"not null;references:patients(id)" json:"patient_id"`
+	Name           string           `gorm:"default:'Guest'" json:"name"`
+	BillingAddress string           `gorm:"default:null" json:"billing_address"`
+	InvoiceNumber  string           `gorm:"not null" json:"invoice_number"`
+	InvoiceDate    *time.Time       `gorm:"not null" json:"invoice_date"`
+	DueDate        *time.Time       `gorm:"not null" json:"due_date"`
+	Details        []InvoiceDetails `gorm:"types:bytes;serializer:gob" json:"details"`
+	Amount         uint             `gorm:"not null" json:"amount"`
+	Subtotal       uint             `gorm:"not null" json:"sub_total"`
+	Balance        uint             `gorm:"default:0" json:"balance"`
+	Discount       uint             `gorm:"default:0" json:"discount"`
+	Completed      uint             `gorm:"default:0" json:"completed"`
+	Payments       []*Payment       `gorm:"constraint:onDelete:CASCADE" json:"payments"`
+	Patient        *Patient         `json:"patient"`
 }
 
 type InvoiceDetails struct {
@@ -58,11 +67,11 @@ func (m *Invoice) ReadAll() (bool, []Invoice) {
 	return true, Invoices
 }
 
-func (cg *Invoice) List(pagination pkg.Pagination) (*pkg.Pagination, error) {
+func (cg *Invoice) List(pagination pkg.Pagination, i *Invoice) (*pkg.Pagination, error) {
 	var invoices []*Invoice
 
-	config.DB.Scopes(Paginate(invoices, &pagination, config.DB)).Find(&invoices)
+	db := config.DB.Scopes(Paginate(invoices, &pagination, config.DB))
+	db.Preload("Patient").Order("balance DESC, created_at ASC").Find(&invoices, i)
 	pagination.Rows = invoices
-
 	return &pagination, nil
 }

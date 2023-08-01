@@ -6,7 +6,6 @@ import { auth } from '@/stores/auth';
 import { toasts } from '@/stores/toasts';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { XCircleIcon } from '@heroicons/vue/24/outline';
 
 const hospital_name = ref('');
 const hospital_address = ref('');
@@ -29,8 +28,6 @@ onMounted(async () => {
   }
 })
 
-const exitApp = () => window.close();
-
 const login = async () => {
   const formData = new FormData(loginForm.value as never as HTMLFormElement);
   const login = await apiRequest.post("login", Object.fromEntries(formData.entries()));
@@ -44,11 +41,7 @@ const login = async () => {
 
 <template>
   <div class="h-screen flex flex-col sm:flex-row">
-    <div class="bg-[url('/hospital-image.png')] bg-cover bg-no-repeat flex-1">
-      <div @click="exitApp" class="fixed left-[10px] top-[10px] cursor-pointer text-center flex flex-col items-center p-2 hover:bg-stone-700 bg-stone-900 text-white">
-      <XCircleIcon class="w-8 h-8" /> EXIT
-    </div>
-    </div>
+    <div class="bg-[url('/hospital-image.png')] bg-cover bg-no-repeat flex-1"></div>
     <div class="p-5 flex flex-col w-[400px] min-h-[85vh] justify-between mx-auto sm:py-10">
       <div class="flex justify-between items-center">
         <div class="w-full">

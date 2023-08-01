@@ -9,4 +9,5 @@ export const toasts = reactive({
     const index = this.toasts.findIndex((toast) => toast.title === title);
     this.toasts.splice(index, 1);
   },
+  clearAll() { this.toasts = [] },
 });

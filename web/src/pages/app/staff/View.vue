@@ -1,17 +1,16 @@
 <script lang="ts" setup>
-import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumbs.vue';
-import ActionButton from '../../../components/ActionButton.vue';
-import PageHeader from '../../../components/PageHeader.vue';
-import apiRequest from '../../../services/http/api-requests';
-import { Staff } from '../../../interfaces'
-import SelectField from '../../../components/form/SelectField.vue';
-import TextField from '../../../components/form/TextField.vue';
-import PrimaryButton from '../../../components/form/PrimaryButton.vue';
-import SecondaryButton from '../../../components/form/SecondaryButton.vue';
+import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumbs.vue';
+import PageHeader from '@/components/PageHeader.vue';
+import apiRequest from '@/services/http/api-requests';
+import { Staff } from '@/interfaces'
+import SelectField from '@/components/form/SelectField.vue';
+import TextField from '@/components/form/TextField.vue';
+import PrimaryButton from '@/components/form/PrimaryButton.vue';
+import SecondaryButton from '@/components/form/SecondaryButton.vue';
 import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import {UserIcon} from '@heroicons/vue/24/solid'
-import { toasts } from '../../../stores/toasts';
+import { toasts } from '@/stores/toasts';
 
 const route = useRoute();
 
@@ -49,8 +48,8 @@ onMounted(async() => { await fetchStaff(true)});
     <PageHeader :title="`${staff.lastname} ${staff.firstname}`" :icon-src="UserIcon"></PageHeader>
     <div style="padding: 0 15px; display: flex; justify-content: space-between; border-bottom:1px solid #333">
       <div>
-        <ActionButton v-on:click="() => $router.push({name: 'deliveries'})" :icon-src="UserIcon">Deliveries</ActionButton>
-        <ActionButton :icon-src="UserIcon">Invoices</ActionButton>
+        <!-- <ActionButton v-on:click="() => $router.push({name: 'deliveries'})" :icon-src="UserIcon">Deliveries</ActionButton> -->
+        <!-- <ActionButton :icon-src="UserIcon">Invoices</ActionButton> -->
       </div>
     </div>
     <div class="page-scroll-area">

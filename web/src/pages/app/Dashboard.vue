@@ -6,8 +6,8 @@ import { ref } from 'vue';
 const links = ref([
   { label: 'Patients', icon: UsersIcon, url: { name: 'patients' } },
   { label: 'Deliveries', icon: UserGroupIcon, url: { name: 'deliveries' } },
-  { label: 'Billings', icon: BanknotesIcon,  url: { name: 'patients' } },
-  { label: 'Reports', icon: QueueListIcon, url: { name: 'patients' } },
+  { label: 'Billings', icon: BanknotesIcon,  url: { name: 'billings' } },
+  { label: 'Reports', icon: QueueListIcon, url: { name: 'reports' } },
 ]);
 
 </script>;

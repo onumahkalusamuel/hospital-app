@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/onumahkalusamuel/hospital-app/config"
+	"github.com/onumahkalusamuel/hospital-app/internal/helpers"
 	"github.com/onumahkalusamuel/hospital-app/internal/models"
 )
 
@@ -19,14 +20,19 @@ func Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "please enter all required fields."})
 	}
 
-	invoice.Amount = 0
+	invoice.Subtotal = 0
 	for x, details := range invoice.Details {
 		invoice.Details[x].Amount = details.Qty * details.Price
-		invoice.Amount += invoice.Details[x].Amount
+		invoice.Subtotal += invoice.Details[x].Amount
 	}
 
 	invoice.StaffID = c.Get("ID").(string)
-	invoice.Balance = invoice.Amount
+	invoice.Balance = invoice.Subtotal - invoice.Discount
+	invoice.Amount = invoice.Balance
+
+	if invoice.InvoiceNumber == "" {
+		invoice.InvoiceNumber = helpers.GetRandKey(7)
+	}
 
 	if err := config.DB.Create(&invoice).Error; err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "error creating record: " + err.Error()})

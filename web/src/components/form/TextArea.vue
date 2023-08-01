@@ -11,7 +11,15 @@ defineProps<{
   value?: string;
   readonly?: boolean;
   rows?: string;
+  modelValue?: String | Number;
 }>()
+
+const emit = defineEmits(['update:modelValue'])
+
+const updateValue = (event: any) => {
+    emit('update:modelValue', event.target.value)
+}
+
 </script>
 <template>
   <label v-if="label" class="text-uppercase cursor-pointer py-1 block" :for="name">
@@ -22,7 +30,7 @@ defineProps<{
     <div v-if="$slots.prepend" class="px-2 flex items-center justify-center hover:bg-gray-100 rounded">
       <slot name="prepend"></slot>
     </div>
-    <textarea :rows="rows" class="w-full rounded py-1 px-2 hover:bg-gray-100 focus:outline-none" :name="name" :placeholder="placeholder" :type="type || 'text'" :required="required" :autocomplete="`new-${name}`" :id="name" :readonly="readonly" :ref="ref">{{ value }}</textarea>
+    <textarea :rows="rows" class="w-full rounded py-1 px-2 hover:bg-gray-100 focus:outline-none" :name="name" :placeholder="placeholder" :type="type || 'text'" :required="required" :autocomplete="`new-${name}`" :id="name" :readonly="readonly" :ref="ref" @input="updateValue">{{ modelValue || value }}</textarea>
     <div v-if="$slots.append" class="px-2 flex items-center justify-center hover:bg-gray-100 rounded">
       <slot name="append"></slot>
     </div>

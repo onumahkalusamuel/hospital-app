@@ -66,8 +66,9 @@ export interface Invoice {
   due_date: string;
   details: InvoiceDetails[];
   patient_id: string;
-  amount: number;
-  balance: number;
+  amount?: number;
+  sub_total?: number;
+  balance?: number;
   completed: number;
   discount: number;
   payments?: Payment[];
@@ -79,10 +80,11 @@ export interface InvoiceDetails {
   qty: number;
   unit: string;
   price: number;
-  amount: number;
+  amount?: number;
 }
 
 export interface Payment {
+  created_at: string;
   id: string;
   patient_id: string;
   invoice_id: string;

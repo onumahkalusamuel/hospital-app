@@ -3,7 +3,7 @@ import ActionButton from '@/components/ActionButton.vue';
 import apiRequest from '@/services/http/api-requests';
 import { Patient, PatientHistory } from '@/interfaces';
 import { DocumentArrowDownIcon } from '@heroicons/vue/24/solid';
-import { XCircleIcon, DocumentChartBarIcon } from '@heroicons/vue/24/outline';
+import { XCircleIcon } from '@heroicons/vue/24/outline';
 import { onMounted, ref } from   'vue';
 import { useRoute } from 'vue-router';
 import dayjs from 'dayjs';
@@ -28,9 +28,14 @@ const downloadPdf = () => {
   html2pdf(printArea.value, { margin: 1, filename: `${filename}.pdf` });
 }
 
-const downloadCsv = () => {
-
-}
+// const downloadCsv = () => {
+//   const filename = `${patient.value.lastname}-${patient.value.firstname}-${route.query.date_from}-${route.query.date_to}`;
+//   records.value
+//     .map(v =>
+//       v.map(x => (isNaN(x) ? `"${x.replace(/"/g, '""')}"` : x)).join(delimiter)
+//     )
+//     .join('\n');
+// }
 
 onMounted(async() => {
   await fetchPatient();
@@ -43,7 +48,7 @@ onMounted(async() => {
     <div class="flex justify-between">
       <div class="px-[15px] flex justify-center py-2 gap-2">
         <ActionButton dark v-on:click="downloadPdf" :icon-src="DocumentArrowDownIcon">Download as PDF</ActionButton>
-        <ActionButton dark v-on:click="downloadCsv" :icon-src="DocumentChartBarIcon">Download as CSV</ActionButton>
+        <!-- <ActionButton dark v-on:click="downloadCsv" :icon-src="DocumentChartBarIcon">Download as CSV</ActionButton> -->
       </div>
       <ActionButton v-on:click="() => $router.go(-1)" :icon-src="XCircleIcon">Exit</ActionButton>
     </div>

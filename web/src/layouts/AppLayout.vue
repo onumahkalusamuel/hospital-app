@@ -49,7 +49,7 @@ onMounted(async () => {
           <span>Deliveries</span>
         </router-link>
 
-        <router-link :class="$route.name == 'invoices'? 'bg-[#00000033]':''" :to="{name:'invoices'}" class="header-icon-link px-3">
+        <router-link :class="$route.name == 'billings'? 'bg-[#00000033]':''" :to="{name:'billings'}" class="header-icon-link px-3">
           <BanknotesIcon class="text-white h-5 w-5 mr-2"/>
           <span>Billings</span>
         </router-link>
