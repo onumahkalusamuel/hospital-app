@@ -10,10 +10,6 @@ defineProps<{
   dark?: boolean;
 }>()
 
-const nbsp = (text:string) => {
-  text.replace(/s/, '&nbsp;')
-}
-
 </script>
 <template>
   <div style="display:inline-block">  
