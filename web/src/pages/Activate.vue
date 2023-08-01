@@ -8,6 +8,7 @@ import PrimaryButton from '@/components/form/PrimaryButton.vue';
 import { toasts } from '@/stores/toasts';
 
 const installation_code = ref('');
+const activation_code = ref('');
 const router = useRouter();
 const route = useRoute();
 const form = ref(null);
@@ -30,6 +31,14 @@ onMounted(async() => {
       installation_code.value = req.installation_code;
     }
   }
+
+  // autoactivate
+  const req = await apiRequest.post('get-activation-code', { installation_code: installation_code.value });
+    if (req.activation_code) {
+      activation_code.value = req.activation_code;
+      await activate()
+    }
+
 })
 
 const copyInstallationCode = async () => {
@@ -38,8 +47,14 @@ const copyInstallationCode = async () => {
 }
 
 const activate = async () => {
-  const formData = new FormData(form.value as never as HTMLFormElement)
-  const activate = await apiRequest.post('activate', Object.fromEntries(formData.entries()));
+  let formdata;
+  if(!activation_code.value) {
+    const formData = new FormData(form.value as never as HTMLFormElement)
+    formdata = Object.fromEntries(formData.entries());
+  } else {
+    formdata = { activation_code: activation_code.value }
+  }
+  const activate = await apiRequest.post('activate', formdata);
   if(activate.message) {
     toasts.addToast({message: activate.message, type: 'success'});
     router.push({name: 'create-admin'})
