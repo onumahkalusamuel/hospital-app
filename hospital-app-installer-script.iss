@@ -26,6 +26,13 @@ Name: "{group}\Hospital Card Mgmt. System"; Filename: "{app}\applauncher.exe"; I
 [Run]
 Filename: {sys}\sc.exe; Parameters: "create HcmsSvc start= auto type= share binPath= ""{app}\hcms.exe"" DisplayName= ""HCMS"""; Flags: runhidden
 Filename: "{sys}\sc.exe"; Parameters: "start HcmsSvc"; Flags: runhidden
+Filename: "{sys}\netsh.exe"; Parameters: "firewall set portopening protocol=TCP port=""{code:GetServerPort}"" name=NxTCP mode=ENABLE"; StatusMsg: "Opening TCP Port ""{code:GetServerPort}"; Flags: runhidden
+
+[Code]
+function GetServerPort(Value: string): String;
+begin
+  Result := '8788';
+end;
 
 [UninstallRun]
 Filename: {sys}\sc.exe; Parameters: "stop HcmsSvc" ; Flags: runhidden; RunOnceId: "stopService"
