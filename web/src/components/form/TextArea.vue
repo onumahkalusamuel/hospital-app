@@ -11,7 +11,7 @@ defineProps<{
   value?: string;
   readonly?: boolean;
   rows?: string;
-  modelValue?: String | Number;
+  modelValue?: string | number;
 }>()
 
 const emit = defineEmits(['update:modelValue'])
@@ -22,7 +22,7 @@ const updateValue = (event: any) => {
 
 </script>
 <template>
-  <label v-if="label" class="text-uppercase cursor-pointer py-1 block" :for="name">
+  <label v-if="label" class="text-uppercase cursor-pointer py-2 font-bold block" :for="name">
     {{ label }}
     <span v-if="required" class="text-red-600">*</span>
   </label>

@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/labstack/echo/v4"
+	"github.com/onumahkalusamuel/hospital-app/config"
 )
 
 func SaveImage(c echo.Context, source string, dest string) (string, error) {
@@ -20,8 +21,9 @@ func SaveImage(c echo.Context, source string, dest string) (string, error) {
 	}
 	defer src.Close()
 
-	dirName := path.Join("files", dest)
-	filename := path.Join(dirName, file.Filename)
+	dirName := path.Join(config.FilesFolder, dest)
+	fileNameOnly := GetRandKey(5) + "-" + file.Filename
+	filename := path.Join(dirName, fileNameOnly)
 
 	// Destination
 	err = os.MkdirAll(dirName, 0755)
@@ -40,5 +42,5 @@ func SaveImage(c echo.Context, source string, dest string) (string, error) {
 		return "", err
 	}
 
-	return filename, nil
+	return fileNameOnly, nil
 }

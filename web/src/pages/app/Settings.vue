@@ -68,7 +68,7 @@ const updateHospital = async () => {
               <div class="w-full"><TextField name="hospital_email" label="Email Address" :value="hospital.hospital_email"/></div>
               <div class="w-full"><TextField name="hospital_phone" label="Phone Number" :value="hospital.hospital_phone"/></div>
             </div>
-            <div class="w-full"><TextField label="Hospital Logo" name="hospital_logo" type="file"/></div>
+            <div class="w-full"><TextField label="Hospital Logo" name="hospital_logo" type="file" accept=".png, .jpg, .jpeg"/></div>
             <div class="flex">
               <div><PrimaryButton type="submit">Submit</PrimaryButton></div>
             </div>

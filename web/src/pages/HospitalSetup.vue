@@ -31,14 +31,14 @@ const hospitalSetup = async () => {
 
 <template>
   <p class="text-xl">Hospital Setup</p>
-  <form v-on:submit.prevent="hospitalSetup" ref="hospitalsetup" enctype="multipart/form-data">
-    <div>
-      <TextField name="hospital_name" placeholder="Hospital Name" class="w-full mb-2"/>
-      <TextField name="hospital_address" placeholder="Physical Address" class="w-full mb-2"/>
-      <TextField name="hospital_email" placeholder="Email Address" class="w-full mb-2"/>
-      <TextField name="hospital_phone" placeholder="Phone Number" class="w-full mb-2"/>
-      <TextField label="Hospital Logo" name="hospital_logo" class="w-full mb-2 font-xl" type="file"/>
-      <PrimaryButton class="w-full mb-2" type="submit">Submit</PrimaryButton>
+  <form method="post" class="py-5" v-on:submit.prevent="hospitalSetup" ref="hospitalsetup" enctype="multipart/form-data">
+    <div class="space-y-2">
+      <TextField name="hospital_name" placeholder="Hospital Name" class="w-full"/>
+      <TextField name="hospital_address" placeholder="Physical Address" class="w-full"/>
+      <TextField name="hospital_email" placeholder="Email Address" class="w-full"/>
+      <TextField name="hospital_phone" placeholder="Phone Number" class="w-full"/>
+      <TextField label="Hospital Logo" name="hospital_logo" class="w-full font-xl" type="file" accept=".png, .jpg, .jpeg"/>
+      <PrimaryButton class="w-full" type="submit">Submit</PrimaryButton>
     </div>
   </form>
 </template>

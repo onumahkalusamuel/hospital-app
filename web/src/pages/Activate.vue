@@ -14,18 +14,18 @@ const route = useRoute();
 const form = ref(null);
 const installationCodeField = ref(null);
 
-onMounted(async() => {
+onMounted(async () => {
   try {
     const req = await apiRequest.get('hospital-details');
-    if(req) { router.push({name: 'login'})}
+    if (req) { router.push({ name: 'login' }) }
 
-  } catch(e) {
+  } catch (e) {
     console.log(e)
   }
 
   // the process the rest
   installation_code.value = route.params.code as string;
-  if(!installation_code.value) {
+  if (!installation_code.value) {
     const req = await apiRequest.get('installation-code');
     if (req.installation_code) {
       installation_code.value = req.installation_code;
@@ -34,49 +34,47 @@ onMounted(async() => {
 
   // autoactivate
   const req = await apiRequest.post('get-activation-code', { installation_code: installation_code.value });
-    if (req.activation_code) {
-      activation_code.value = req.activation_code;
-      await activate()
-    }
+  if (req.activation_code) {
+    activation_code.value = req.activation_code;
+    await activate()
+  }
 
 })
 
 const copyInstallationCode = async () => {
   await navigator.clipboard.writeText(installation_code.value as string);
-  toasts.addToast({message: 'Installation code copied to clipboard.', type: 'success'});
+  toasts.addToast({ message: 'Installation code copied to clipboard.', type: 'success' });
 }
 
 const activate = async () => {
   let formdata;
-  if(!activation_code.value) {
+  if (!activation_code.value) {
     const formData = new FormData(form.value as never as HTMLFormElement)
     formdata = Object.fromEntries(formData.entries());
   } else {
     formdata = { activation_code: activation_code.value }
   }
   const activate = await apiRequest.post('activate', formdata);
-  if(activate.message) {
-    toasts.addToast({message: activate.message, type: 'success'});
-    router.push({name: 'create-admin'})
+  if (activate.message) {
+    toasts.addToast({ message: activate.message, type: 'success' });
+    router.push({ name: 'create-admin' })
   }
 }
 </script>;
 
 <template>
   <p class="text-xl">Activate HCMS to continue</p>
-  <form v-on:submit.prevent="activate" ref="form">
-    <div>
-      <div class="w-full mb-3 flex items-center">
-        <TextField ref="installationCodeField" readonly :value="installation_code" class="w-full">
-          <template #append>
-            <button class="w-5 h-5" type="button" v-on:click.stop.prevent="copyInstallationCode">
-              <DocumentDuplicateIcon class="w-5 h-5" />
-            </button>
-          </template>
-        </TextField>
-      </div>
-      <TextField name="activation_code" placeholder="Activation Code" class="w-full mb-2" />
-      <PrimaryButton class="w-full mb-2" type="submit">Activate</PrimaryButton>
+  <form method="post" class="py-5" v-on:submit.prevent="activate" ref="form">
+    <div class="space-y-2">
+      <TextField ref="installationCodeField" readonly :value="installation_code" class="w-full">
+        <template #append>
+          <button class="w-5 h-5" type="button" v-on:click.stop.prevent="copyInstallationCode">
+            <DocumentDuplicateIcon class="w-5 h-5" />
+          </button>
+        </template>
+      </TextField>
+      <TextField name="activation_code" placeholder="Activation Code" class="w-full" />
+      <PrimaryButton class="w-full" type="submit">Activate</PrimaryButton>
     </div>
   </form>
   <small>Copy the installation code above and forward to <strong>activations@hcms.org</strong> for activation.</small>

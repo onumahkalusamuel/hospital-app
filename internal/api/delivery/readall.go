@@ -14,7 +14,23 @@ func ReadAll(c echo.Context) error {
 	// return c.JSON(http.StatusOK, deliveries)
 
 	handle := models.Delivery{}
-	list, err := handle.List(pkg.GrabFromContext(pkg.Pagination{}, c), []string{"Patient"})
+	if patient_id := c.QueryParam("patient_id"); patient_id != "" {
+		handle.PatientID = patient_id
+	}
+
+	if baby_sex := c.QueryParam("baby_sex"); baby_sex != "" {
+		handle.BabySex = baby_sex
+	}
+
+	if condition := c.QueryParam("condition"); condition != "" {
+		handle.Condition = condition
+	}
+
+	if delivery_mode := c.QueryParam("delivery_mode"); delivery_mode != "" {
+		handle.DeliveryMode = delivery_mode
+	}
+
+	list, err := handle.List(pkg.GrabFromContext(pkg.Pagination{}, c), []string{"Patient"}, &handle)
 	if err != nil {
 		panic(err)
 	}

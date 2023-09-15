@@ -11,7 +11,7 @@ import (
 func ReadOne(c echo.Context) error {
 	var patient models.Patient
 	patient.ID = c.Param("id")
-	config.DB.Model(&models.Patient{}).Preload("NextOfKin").First(&patient)
+	config.DB.Model(&models.Patient{}).First(&patient)
 	if patient.Firstname == "" {
 		return c.JSON(http.StatusNotFound, echo.Map{"message": "account not found"})
 	}

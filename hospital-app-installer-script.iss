@@ -5,7 +5,7 @@
 
 [Setup]
 AppName=Hospital Card Mgmt. System
-AppVersion=1.0.0
+AppVersion=1.1.0
 WizardStyle=modern
 DefaultDirName={autopf}\HCMS
 DefaultGroupName=HCMS

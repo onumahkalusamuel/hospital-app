@@ -1,6 +1,9 @@
 package config
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/denisbrodbeck/machineid"
 	"gorm.io/gorm"
 )
@@ -9,6 +12,7 @@ const (
 	UpdatePath = "./updates/"
 	JwtSecret  = "secret"
 	AppKey     = "hospital"
+	ServerPort = "8788"
 )
 
 var (
@@ -38,3 +42,7 @@ const (
 )
 
 type BodyStructure map[string]string
+
+var AppDataFolder = fmt.Sprintf("%v/%v", os.Getenv("APPDATA"), "HCMS")
+var DatabaseFile = fmt.Sprintf("%v/%v", AppDataFolder, "hospital.appdb")
+var FilesFolder = fmt.Sprintf("%v/%v", AppDataFolder, "files")

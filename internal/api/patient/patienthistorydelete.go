@@ -14,7 +14,7 @@ func PatientHistoryDelete(c echo.Context) error {
 	}
 
 	patientHistory := &models.PatientHistory{}
-	patientHistory.ID = c.Param("hid")
+	patientHistory.ID = c.Param("history_id")
 	patientHistory.PatientID = c.Param("patient_id")
 	patientHistory.Read()
 

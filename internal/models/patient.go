@@ -7,7 +7,6 @@ import (
 
 	"github.com/onumahkalusamuel/hospital-app/config"
 	"github.com/onumahkalusamuel/hospital-app/pkg"
-	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
@@ -24,14 +23,14 @@ type Patient struct {
 	Email              string            `gorm:"default:null" json:"email"`
 	Sex                string            `gorm:"default:null" json:"sex"`
 	MaritalStatus      string            `gorm:"default:'Single'" json:"marital_status"`
-	DOB                datatypes.Date    `gorm:"default:null" json:"dob"`
+	Age                string            `gorm:"default:null" json:"age"`
 	Address            string            `gorm:"default:null" json:"address"`
 	Occupation         string            `gorm:"default:null" json:"occupation"`
+	Anc                string            `gorm:"default:null" json:"anc"`
 	CurrentAppointment string            `gorm:"default:null" json:"current_appointment"`
 	CurrentStatus      string            `gorm:"default:null" json:"current_status"`
 	Invoices           []*Invoice        `gorm:"constraint:onDelete:CASCADE" json:"invoices"`
 	PatientHistory     []*PatientHistory `gorm:"constraint:onDelete:CASCADE" json:"patient_history"`
-	NextOfKin          *NextOfKin        `gorm:"constraint:onDelete:CASCADE" json:"next_of_kin"`
 }
 
 func (m *Patient) Create() error {

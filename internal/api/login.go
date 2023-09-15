@@ -57,7 +57,8 @@ func Login(c echo.Context) error {
 		return err
 	}
 	return c.JSON(200, echo.Map{
-		"message": "Logged in successfully",
-		"jwt":     t,
+		"message":        "Logged in successfully",
+		"jwt":            t,
+		"asset_base_url": "//" + c.Request().Host + "/",
 	})
 }

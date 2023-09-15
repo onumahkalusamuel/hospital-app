@@ -10,7 +10,7 @@ import (
 
 func PatientHistoryReadOne(c echo.Context) error {
 	var patientHistory models.PatientHistory
-	patientHistory.ID = c.Param("hid")
+	patientHistory.ID = c.Param("history_id")
 	patientHistory.PatientID = c.Param("patient_id")
 	config.DB.Model(&models.Patient{}).Preload("Patient").First(&patientHistory)
 	if patientHistory.StaffID == "" {

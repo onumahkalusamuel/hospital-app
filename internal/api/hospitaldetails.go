@@ -15,6 +15,7 @@ func HospitalDetails(c echo.Context) error {
 		"hospital_email":   "",
 		"hospital_phone":   "",
 		"hospital_logo":    "",
+		"asset_base_url":   "",
 	}
 	var setting *models.Settings
 
@@ -41,7 +42,9 @@ func HospitalDetails(c echo.Context) error {
 	// logo
 	setting = &models.Settings{Setting: "hospital_logo"}
 	setting.Read()
-	hospital["hospital_logo"] = "//" + c.Request().Host + "/" + setting.Value
+	hospital["hospital_logo"] = setting.Value
+
+	hospital["asset_base_url"] = "//" + c.Request().Host
 
 	// return
 	return c.JSON(http.StatusOK, hospital)

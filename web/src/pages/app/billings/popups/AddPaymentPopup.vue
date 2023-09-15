@@ -42,14 +42,14 @@ watch(() => popupStore.show, async (newValue) => { if (newValue === true) await 
     <form method="POST" v-on:submit.prevent="addPayment">
       <div class="text-center font-bold py-3">Balance: {{ ((invoice.balance || 0) - (payment.amount_paid || 0)).toLocaleString('en-US') }}</div>
       <div class="flex gap-x-3">
-        <div class="w-full"><TextField label="Payment Amount" placeholder="100000" v-model.number="payment.amount_paid" type="number" required :max="invoice.balance"></TextField></div>
-        <div class="w-full"><SelectField label="Payment Status" v-model="payment.status" required :options="[['paid'], ['waived']]"></SelectField></div>
+        <div class="w-full"><TextField label="Payment Amount" placeholder="100000" v-model.number="payment.amount_paid" type="number" name="amount_paid" required :max="invoice.balance"></TextField></div>
+        <div class="w-full"><SelectField label="Payment Status" v-model="payment.status" name="payment.status" required :options="[['paid'], ['waived']]"></SelectField></div>
       </div>
       <div class="flex">
-        <div class="w-full"><TextField label="Payment Reference" placeholder="XFyg3sstr" v-model="payment.payment_reference"></TextField></div>
+        <div class="w-full"><TextField label="Payment Reference" placeholder="XFyg3sstr" v-model="payment.payment_reference" name="payment_reference"></TextField></div>
       </div>
       <div class="flex">
-        <div class="w-full"><TextArea label="Note" placeholder="Note" v-model="payment.note"></TextArea></div>
+        <div class="w-full"><TextArea label="Note" placeholder="Note" v-model="payment.note" name="note"></TextArea></div>
       </div>
       <div class="flex gap-3 mt-5">
         <div><PrimaryButton type="submit">Submit</PrimaryButton></div>

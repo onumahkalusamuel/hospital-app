@@ -17,17 +17,4 @@ func PatientHistory(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, pag)
-
-	// var patientHistory []models.PatientHistory
-	// db := config.DB.Model(&models.PatientHistory{}).Preload("Patient")
-
-	// db.Order("date ASC")
-
-	// db.Find(&patientHistory, &models.PatientHistory{PatientID: c.Param("patient_id")})
-
-	// if len(patientHistory) < 1 {
-	// 	return c.JSON(http.StatusNotFound, echo.Map{"message": "record not found"})
-	// }
-
-	// return c.JSON(http.StatusOK, patientHistory)
 }

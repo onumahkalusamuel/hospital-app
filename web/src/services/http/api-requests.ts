@@ -32,6 +32,12 @@ const postMulti = async (url: string, form: object) => {
     .catch(e => handleError(e));
 };
 
+const putMulti = async (url: string, form: object) => {
+  return await __multi.put(url, form)
+    .then(response => { return response?.data; })
+    .catch(e => handleError(e));
+};
+
 const deleteRecord = async (url: string, silent?: boolean) => {
   if(!silent && !confirm('Are you sure you want to delete this record?')) return;
   return await __api.delete(url)
@@ -45,6 +51,6 @@ const put = async (url: string, formData: object) => {
     .catch(e => { return handleError(e); });
 };
 
-const apiRequest = { get, getBlob, post, postBlob, postMulti, deleteRecord, put };
+const apiRequest = { get, getBlob, post, postBlob, postMulti, putMulti, deleteRecord, put };
 
 export default apiRequest;

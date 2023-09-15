@@ -13,7 +13,7 @@ func Init() {
 
 	var err error
 
-	config.DB, err = gorm.Open(sqlite.Open("hospital.appdb"), &gorm.Config{})
+	config.DB, err = gorm.Open(sqlite.Open(config.DatabaseFile), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalln(err)
@@ -22,7 +22,6 @@ func Init() {
 	config.DB.AutoMigrate(
 		&models.Delivery{},
 		&models.Invoice{},
-		&models.NextOfKin{},
 		&models.Patient{},
 		&models.PatientHistory{},
 		&models.Payment{},

@@ -23,7 +23,7 @@ func WebServer() {
 	// get router
 	e := echo.New()
 	e.Use(echomiddleware.CORS())
-	e.Static("files/", "files")
+	e.Static("files/", config.FilesFolder)
 
 	// setup the database
 	db.Init()
@@ -62,6 +62,7 @@ func WebServer() {
 	authApi.PUT("/patients/:id", patient.Update)
 	authApi.DELETE("/patients/:id", patient.Delete)
 	// patient history
+	authApi.POST("/patients/anc-patient", patient.ReadAllUnpaginated)
 	authApi.GET("/patients/:patient_id/patient-history", patient.PatientHistory)
 	authApi.POST("/patients/:patient_id/patient-history", patient.PatientHistoryCreate)
 	authApi.POST("/patients/:patient_id/patient-history/all", patient.PatientHistoryAll)
@@ -73,11 +74,10 @@ func WebServer() {
 	authApi.POST("/patients/:patient_id/discharge-patient", patient.DischargePatient)
 	authApi.POST("/patients/:patient_id/initiate-appointment", patient.InitiateAppointment)
 
-	// next of kin
-	authApi.POST("/patients/:patient_id/next-of-kin", patient.PatientNextOfKin)
 	// patient invoices
 	authApi.GET("/patients/:patient_id/invoices", patient.PatientInvoice)
 	// deliveries crud and actions
+	authApi.POST("/deliveries/all", delivery.ReadAllUnpaginated)
 	authApi.GET("/deliveries", delivery.ReadAll)
 	authApi.POST("/deliveries", delivery.Create)
 	authApi.GET("/deliveries/:id", delivery.ReadOne)
@@ -93,5 +93,5 @@ func WebServer() {
 	authApi.POST("/invoices/:invoice_id/payments", payment.Create)
 	authApi.DELETE("/invoices/:invoice_id/payments/:id", payment.Delete)
 
-	e.Logger.Fatal(e.Start(net.JoinHostPort("0.0.0.0", "8788")))
+	e.Logger.Fatal(e.Start(net.JoinHostPort("0.0.0.0", config.ServerPort)))
 }

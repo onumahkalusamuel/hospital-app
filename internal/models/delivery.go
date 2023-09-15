@@ -50,7 +50,7 @@ func (m *Delivery) ReadAll() (bool, []Delivery) {
 	return true, Deliverys
 }
 
-func (cg *Delivery) List(pagination pkg.Pagination, preloads []string) (*pkg.Pagination, error) {
+func (cg *Delivery) List(pagination pkg.Pagination, preloads []string, d *Delivery) (*pkg.Pagination, error) {
 	var deliveries []*Delivery
 
 	db := config.DB.Scopes(Paginate(deliveries, &pagination, config.DB))
@@ -60,7 +60,7 @@ func (cg *Delivery) List(pagination pkg.Pagination, preloads []string) (*pkg.Pag
 		}
 	}
 
-	db.Find(&deliveries)
+	db.Find(&deliveries, d)
 	pagination.Rows = deliveries
 
 	return &pagination, nil

@@ -15,11 +15,10 @@ import Settings from '@/pages/app/Settings.vue';
 import Patients from '@/pages/app/patients/Index.vue';
 import AddPatient from '@/pages/app/patients/Add.vue';
 import ViewPatient from '@/pages/app/patients/View.vue';
-import NextOfKin from '@/pages/app/patients/NextOfKin.vue';
-import PatientHistory from '@/pages/app/patients/HistoryIndex.vue';
-import PatientHistoryAdd from '@/pages/app/patients/HistoryAdd.vue';
+import EditPatient from '@/pages/app/patients/Edit.vue';
 import PatientHistoryPrintView from '@/pages/app/patients/HistoryPrintView.vue';
-import PatientHistoryView from '@/pages/app/patients/HistoryView.vue';
+import DeliveriesIndex from '@/pages/app/patients/DeliveriesIndex.vue';
+import BillingsIndex from '@/pages/app/patients/BillingsIndex.vue';
 
 import Deliveries from '@/pages/app/deliveries/Index.vue';
 import AddDelivery from '@/pages/app/deliveries/Add.vue';
@@ -32,9 +31,12 @@ import ViewStaff from '@/pages/app/staff/View.vue';
 import Invoices from '@/pages/app/billings/Index.vue';
 import AddInvoice from '@/pages/app/billings/Add.vue';
 import ViewInvoice from '@/pages/app/billings/View.vue';
+import PrintReceipt from '@/pages/app/billings/PrintReceipt.vue';
+import PrintInvoice from '@/pages/app/billings/PrintInvoice.vue';
 
 import Reports from '@/pages/app/reports/Index.vue';
-
+import AncPatientPrintView from '@/pages/app/reports/AncPatientPrintView.vue';
+import DeliveriesPrintPreview from '@/pages/app/reports/DeliveriesPrintView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -47,6 +49,12 @@ export const routes: RouteRecordRaw[] = [
   },
   { path: '/login', component: Login, name: 'login' },
   { path: '/app/patients/:id/patient-history/print', component: PatientHistoryPrintView, name: 'patient-history-print-view' },
+  // billings
+  { path: '/app/billings/:id/print-receipt', component: PrintReceipt, name: 'billings-print-receipt' },
+  { path: '/app/billings/:id/print-invoice', component: PrintInvoice, name: 'billings-print-invoice' },
+  // reports 
+  { path: '/app/reports/anc-patient', component: AncPatientPrintView, name: 'anc-patient-print-view' },
+  { path: '/app/reports/deliveries', component: DeliveriesPrintPreview, name: 'deliveries-print-view' },
   {
     path: '/app/', component: AppLayout, beforeEnter: appGuard, children: [
       { path: 'dashboard', component: Dashboard, name: 'dashboard' },
@@ -54,13 +62,12 @@ export const routes: RouteRecordRaw[] = [
       { path: 'patients', component: Patients, name: 'patients' },
       { path: 'patients/add', component: AddPatient, name: 'add-patient' },
       { path: 'patients/:id', component: ViewPatient, name: 'view-patient' },
-      { path: 'patients/:id/next-of-kin', component: NextOfKin, name: 'next-of-kin' },
-      { path: 'patients/:id/patient-history', component: PatientHistory, name: 'patient-history' },
-      { path: 'patients/:id/patient-history/add', component: PatientHistoryAdd, name: 'patient-history-add' },
-      { path: 'patients/:id/patient-history/:hid', component: PatientHistoryView, name: 'patient-history-view' },
+      { path: 'patients/:id/edit', component: EditPatient, name: 'edit-patient' },
+      { path: 'patients/:id/patient-billings', component: BillingsIndex, name: 'patient-billings' },
+      { path: 'patients/:id/patient-deliveries', component: DeliveriesIndex, name: 'patient-deliveries' },
 
       { path: 'deliveries', component: Deliveries, name: 'deliveries' },
-      { path: 'deliveries/add', component: AddDelivery, name: 'add-delivery' },
+      { path: 'deliveries/add/:patient_id?', component: AddDelivery, name: 'add-delivery' },
       { path: 'deliveries/:id', component: ViewDelivery, name: 'view-delivery' },
 
       { path: 'staff', component: Staff, name: 'staff' },
@@ -68,7 +75,7 @@ export const routes: RouteRecordRaw[] = [
       { path: 'staff/:id', component: ViewStaff, name: 'view-staff' },
 
       { path: 'billings', component: Invoices, name: 'billings' },
-      { path: 'billings/add', component: AddInvoice, name: 'add-invoice' },
+      { path: 'billings/add/:patient_id?', component: AddInvoice, name: 'add-invoice' },
       { path: 'billings/:id', component: ViewInvoice, name: 'view-invoice' },
 
       { path: 'reports', component: Reports, name: 'reports' },

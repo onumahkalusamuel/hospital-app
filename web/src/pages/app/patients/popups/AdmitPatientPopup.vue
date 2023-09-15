@@ -12,14 +12,15 @@ import SecondaryButton from '@/components/form/SecondaryButton.vue';
 defineProps<{ popupId: string }>()
 const admitPatientRef = ref(null);
 const route = useRoute();
+const emit = defineEmits(["update:closed"]);
+
 
 const admitPatient = async () => {
   const formData = Object.fromEntries(new FormData(admitPatientRef.value as never as HTMLFormElement).entries())
   const admit = await apiRequest.post(`patients/${route.params.id}/admit-patient`, formData);
   if(admit.message) {
     toasts.addToast({message: "patient admitted successfully.", type: 'success'});
-    window.location.reload();
-    // router.push({ name: 'view-patient', params: { id: route.params.id }, query: { t: new Date() } })
+    emit('update:closed');
     popupStore.show = false;
   }
 }

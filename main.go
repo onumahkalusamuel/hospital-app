@@ -1,7 +1,10 @@
 package main
 
 import (
+	"os"
+
 	"github.com/kardianos/service"
+	"github.com/onumahkalusamuel/hospital-app/config"
 	"github.com/onumahkalusamuel/hospital-app/internal"
 )
 
@@ -15,7 +18,8 @@ func main() {
 		Description: "Hospital Card Management System",
 	}
 	runAsService(svcConfig, func() {
-
+		os.Mkdir(config.AppDataFolder, 0755)
+		os.Mkdir(config.FilesFolder, 0755)
 		go internal.WebServer()
 	})
 }

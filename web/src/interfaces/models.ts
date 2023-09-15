@@ -10,31 +10,16 @@ export interface Patient {
   lastname: string;
   phone: string;
   email: string;
-  dob: string;
+  age: string;
   current_appointment: string;
   current_status: string;
   sex: string;
   address: string;
   occupation: string;
   marital_status: string;
-  next_of_kin?: NextOfKin;
+  anc: string;
   patient_history?: PatientHistory[];
   invoices?: Invoice[];
-}
-
-export interface NextOfKin {
-  id: string;
-  created_at: Date,
-  title: string;
-  firstname: string;
-  middlename: string;
-  lastname: string;
-  phone: string;
-  email: string;
-  sex: string;
-  address: string;
-  occupation: string;
-  relationship: string;
 }
 
 export interface Delivery {
@@ -78,7 +63,6 @@ export interface Invoice {
 export interface InvoiceDetails {
   description: string;
   qty: number;
-  unit: string;
   price: number;
   amount?: number;
 }
@@ -101,6 +85,7 @@ export interface PatientHistory {
   patient_id: string;
   date_time: string;
   type: PatientHistoryTypes;
+  document: string;
   details: { [key: string]: any; };
   patient?: Patient;
 }

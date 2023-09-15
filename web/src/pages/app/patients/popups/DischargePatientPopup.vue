@@ -12,14 +12,14 @@ import TextArea from '@/components/form/TextArea.vue';
 defineProps<{ popupId: string }>()
 const dischargePatientRef = ref(null);
 const route = useRoute();
+const emit = defineEmits(["update:closed"]);
 
 const dischargePatient = async () => {
   const formData = Object.fromEntries(new FormData(dischargePatientRef.value as never as HTMLFormElement).entries())
   const admit = await apiRequest.post(`patients/${route.params.id}/discharge-patient`, formData);
   if(admit.message) {
     toasts.addToast({message: "patient discharged successfully.", type: 'success'});
-    window.location.reload();
-    // router.push({ name: 'view-patient', params: { id: route.params.id }, query: { t: new Date() } })
+    emit('update:closed');
     popupStore.show = false;
   }
 }

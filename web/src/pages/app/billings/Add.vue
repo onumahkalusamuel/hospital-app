@@ -11,39 +11,39 @@ import { PlusCircleIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { Invoice, InvoiceDetails, Patient } from '@/interfaces';
 import { popupStore, toasts } from '@/stores';
 import SelectPatientPopup from '@/components/popups/SelectPatientPopup.vue';
+import { v4 as uuid } from 'uuid';
+import { useRoute, useRouter } from 'vue-router';
 import ActionButton from '@/components/ActionButton.vue';
-import { PlusIcon } from '@heroicons/vue/24/solid';
-import {v4 as uuid} from 'uuid';
-import { useRouter } from 'vue-router';
+import { PencilIcon } from '@heroicons/vue/24/solid';
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
-  // { title: "Billings",  link: { name: "billings" } },
   { title: "Add Invoice", current: true },
 ] as BreadcrumbItem[]);
 
 const router = useRouter();
+const route = useRoute();
 const selectPatientPopupId = ref('selectPatient');
-const patient =ref({} as Patient);
-const invoice = ref({ } as Invoice);
-const invoiceDetails = ref({[uuid()]: {}} as {[key:string]: InvoiceDetails});
+const patient = ref({} as Patient);
+const invoice = ref({} as Invoice);
+const invoiceDetails = ref({ [uuid()]: {} } as { [key: string]: InvoiceDetails });
 const subTotal = computed((): number => {
-    let sum = 0;
-    Object.values(invoiceDetails.value).forEach(element => {
-      element.amount = (element.qty ?? 0) * (element.price ?? 0)
-      sum += element.amount
-    });
-    return sum
+  let sum = 0;
+  Object.values(invoiceDetails.value).forEach(element => {
+    element.amount = (element.qty ?? 0) * (element.price ?? 0)
+    sum += element.amount
+  });
+  return sum
 })
 
-const showSelectPatientPopup = () => { popupStore.id = selectPatientPopupId.value; popupStore.show = true;}
+const showSelectPatientPopup = () => { popupStore.id = selectPatientPopupId.value; popupStore.show = true; }
 
 const addRow = () => {
   invoiceDetails.value[uuid()] = {} as InvoiceDetails;
 }
 const removeRow = (key: string) => {
   delete invoiceDetails.value[key]
-  if(!Object.values(invoiceDetails.value).length) invoiceDetails.value[uuid()] = {} as InvoiceDetails
+  if (!Object.values(invoiceDetails.value).length) invoiceDetails.value[uuid()] = {} as InvoiceDetails
 }
 
 // const clearRows = () => {
@@ -51,53 +51,41 @@ const removeRow = (key: string) => {
 //   invoiceDetails.value[uuid()] = {} as InvoiceDetails
 // }
 
-const create = async() => {
+const create = async () => {
   invoice.value.details = [];
 
   Object.values(invoiceDetails.value).forEach((item) => {
-    if((item.qty as number) > 0) {
+    if ((item.qty as number) > 0) {
       invoice.value.details.push({
         description: item.description,
         qty: item.qty || 0,
-        unit: item.unit || 'pcs',
         price: item.price,
       });
     }
   });
-
-  console.log(invoice.value)
 
   const create = await apiRequest.post('invoices', {
     ...invoice.value,
     invoice_date: dayjs(invoice.value.invoice_date as string).format('YYYY-MM-DDTHH:mm:ss[Z]'),
     due_date: dayjs(invoice.value.due_date as string).format('YYYY-MM-DDTHH:mm:ss[Z]'),
   });
-  
-  if(create?.id) {
-    toasts.addToast({message: "record created successfully.", type: 'success'});
+
+  if (create?.id) {
+    toasts.addToast({ message: "record created successfully.", type: 'success' });
     router.push({ name: 'view-invoice', params: { id: create.id } })
   }
-
-  // const formData = Object.fromEntries(new FormData(createForm.value as never as HTMLFormElement).entries())
-  // if(formData.delivery_date_time) {
-  //   formData.delivery_date_time = dayjs(formData.delivery_date_time as string).format('YYYY-MM-DDTHH:mm:ss[Z]');
-  // }
-
-  // const create = await apiRequest.post('invoices', formData);
-  // if(create?.id) {
-  //   toasts.addToast({message: "record created successfully.", type: 'success'});
-  //   router.push({ name: 'view-delivery', params: { id: create.id } })
-  // }
 }
 
-onMounted(async() => {
-  const req = await apiRequest.get('patients?query=GUEST');
-  console.log(req);
-  patient.value = req.rows[0];
-  // fetch the guest user
+onMounted(async () => {
+  if (route.params.patient_id) {
+    patient.value = await apiRequest.get(`patients/${route.params.patient_id}`);
+  } else {
+    const req = await apiRequest.get('patients?query=GUEST');
+    patient.value = req.rows[0];
+  }
 })
 
-watch(() => patient.value.id, ()=> {
+watch(() => patient.value.id, () => {
   invoice.value.name = `${patient.value.lastname} ${patient.value.firstname}`
   invoice.value.patient_id = patient.value.id;
   if (patient.value.address) invoice.value.billing_address = `${patient.value.address}`
@@ -114,27 +102,39 @@ watch(() => patient.value.id, ()=> {
         <div class="flex justify-between">
           <div class="flex">
             <div class="font-bold pr-3">
-              <div class="mb-2">Bill To:</div>
-              <div class="w-[60px]"><PrimaryButton @click="showSelectPatientPopup">Select</PrimaryButton></div>
+              <div class="py-2">Bill To:</div>
+              <div class="w-[120px]">
+                <ActionButton dark :icon-src="PencilIcon" @click="showSelectPatientPopup">Pick</ActionButton>
+              </div>
             </div>
-            <div class="space-y-2">
-              <div class="w-[300px]"><TextField label="Patient Name" v-model="invoice.name" required /></div>
-              <div><TextField label="Billing Address" v-model="invoice.billing_address" required /></div>
+            <div>
+              <div class="w-[300px]">
+                <TextField label="Patient Name" v-model="invoice.name" required />
+              </div>
+              <div>
+                <TextField label="Billing Address" v-model="invoice.billing_address" required />
+              </div>
             </div>
           </div>
           <div class="">
             <div class="space-y-2 flex flex-col">
               <div class="flex items-center">
-                <div class="font-bold w-[120px] text-right">Invoice Number:</div>
-                <div class="w-[250px] ml-3"><TextField placeholder="Invoice number (optional)" v-model="invoice.invoice_number"></TextField></div>
+                <div class="font-bold w-[150px] text-right">Invoice Number:</div>
+                <div class="w-[250px] ml-3">
+                  <TextField placeholder="Invoice number (optional)" v-model="invoice.invoice_number"></TextField>
+                </div>
               </div>
               <div class="flex items-center justify-between">
-                <div class="font-bold w-[120px] text-right">Invoice Date:</div>
-                <div class="w-[250px] ml-3"><TextField v-model="invoice.invoice_date" type="date" required></TextField></div>
+                <div class="font-bold w-[150px] text-right">Invoice Date:</div>
+                <div class="w-[250px] ml-3">
+                  <TextField v-model="invoice.invoice_date" type="date" required></TextField>
+                </div>
               </div>
               <div class="flex items-center justify-between">
-                <div class="font-bold w-[120px] text-right">Due Date:</div>
-                <div class="w-[250px] ml-3"><TextField v-model="invoice.due_date"  type="date" required></TextField></div>
+                <div class="font-bold w-[150px] text-right">Due Date:</div>
+                <div class="w-[250px] ml-3">
+                  <TextField v-model="invoice.due_date" type="date" required></TextField>
+                </div>
               </div>
             </div>
           </div>
@@ -144,23 +144,26 @@ watch(() => patient.value.id, ()=> {
             <tr>
               <th class="text-left">Description</th>
               <th class="text-left w-[120px]">Quantity</th>
-              <th class="text-left w-[120px]">Unit</th>
               <th class="text-left w-[120px]">Price</th>
-              <th class="text-left w-[120px]">Amount</th>
-              <th class="text-left w-[50px]">
-                <ActionButton dark @click="addRow" :icon-src="PlusIcon" class="w-full"></ActionButton>
-              </th>
+              <th class="text-right w-[120px]">Amount</th>
+              <th class="text-left w-[50px]"></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="d, key in invoiceDetails" :key="key">
-              <td><TextField class="w-full" v-model="d.description"/></td>
-              <td><TextField class="w-[120px]" v-model.number="d.qty" type="number" /></td>
-              <td><TextField class="w-[120px]" v-model="d.unit" /></td>
-              <td><TextField class="w-[120px]" v-model.number="d.price" type="number" /></td>
+              <td>
+                <TextField class="w-full" v-model="d.description" />
+              </td>
+              <td>
+                <TextField class="w-[120px]" v-model.number="d.qty" type="number" />
+              </td>
+              <td>
+                <TextField class="w-[120px]" v-model.number="d.price" type="number" />
+              </td>
               <td class="text-right px-2">{{ ((d.qty || 0) * (d.price || 0)).toLocaleString("en-US") }}</td>
               <td class=" w-[50px]">
-                <button type="button" title="Delete item" @click="() => removeRow(`${key}`)" class="rounded border-[1px] w-[50px] border-blue-600 py-1 hover:bg-blue-600 hover:text-white active:bg-blue-700 flex items-center justify-center text-center">  
+                <button type="button" title="Delete item" @click="() => removeRow(`${key}`)"
+                  class="rounded border-[1px] w-[50px] border-blue-600 py-1 hover:bg-blue-600 hover:text-white active:bg-blue-700 flex items-center justify-center text-center">
                   <TrashIcon class="w-5 h-5" />
                 </button>
               </td>
@@ -168,34 +171,31 @@ watch(() => patient.value.id, ()=> {
           </tbody>
           <tfoot class="border-t-[1px] border-stone-400 border-b-[1px]">
             <tr>
-              <th class="py-2 text-right" colspan="4">SUB TOTAL</th>
-              <th colspan="2" class="py-2 text-xl font-bold text-right">{{ subTotal.toLocaleString("en-US") }}</th>
+              <th class="py-2 text-right" colspan="2">SUB TOTAL</th>
+              <th colspan="3" class="py-2 text-xl font-bold text-right">{{ subTotal.toLocaleString("en-US") }}</th>
             </tr>
             <tr>
-              <th class="py-2 text-right" colspan="4">DISCOUNT</th>
-              <th colspan="2" class="py-2 text-xl font-bold text-right pl-3">
-                <TextField v-model.number="invoice.discount" type="number" class="text-right"/>
+              <th class="py-2 text-right" colspan="2">DISCOUNT</th>
+              <th colspan="3" class="py-2 text-xl font-bold text-right pl-3">
+                <TextField v-model.number="invoice.discount" type="number" class="text-right appearance-none" />
               </th>
             </tr>
             <tr>
-              <th class="py-2 text-right" colspan="4">GRAND TOTAL</th>
-              <th colspan="2" class="py-2 text-xl font-bold text-right">{{ (subTotal - (invoice.discount || 0)).toLocaleString("en-US") }}</th>
+              <th class="py-2 text-right" colspan="2">GRAND TOTAL</th>
+              <th colspan="3" class="py-2 text-xl font-bold text-right">{{ (subTotal - (invoice.discount ||
+                0)).toLocaleString("en-US") }}</th>
             </tr>
           </tfoot>
         </table>
-        <div class="flex justify-between">
-          <div class="min-w-[250px] flex space-x-3">
-            <div>
-              <PrimaryButton type="submit" class="w-full">Create Invoice</PrimaryButton>
-            </div>
-            <div>
-              <SecondaryButton type="button" class="w-full" v-on:click.prevent="()=>$router.go(-1)">Cancel</SecondaryButton>
-            </div>
+        <div class="flex space-x-2">
+          <div class="flex">
+            <PrimaryButton type="submit">Submit</PrimaryButton>
           </div>
-          <div>
-            <div>
-              <PrimaryButton type="button" @click="addRow" class="w-full">Add Row</PrimaryButton>
-            </div>
+          <div class="flex">
+            <SecondaryButton type="button" v-on:click.prevent="() => $router.go(-1)">Cancel</SecondaryButton>
+          </div>
+          <div class="flex">
+            <PrimaryButton type="button" @click="addRow">Add Row</PrimaryButton>
           </div>
         </div>
       </form>

@@ -77,7 +77,7 @@ watch(() => pagination.value.query, fetchPatients);
           <div class="cell-data cell-size-1">Name</div>
           <div class="cell-data">Card No</div>
           <div class="cell-data">Sex</div>
-          <div class="cell-data">Phone</div>
+          <div class="cell-data cell-size-1">Phone</div>
           <div class="cell-data cell-size-1">Current Appnt.</div>
           <div class="cell-data">Actions</div>
         </div>
@@ -91,7 +91,7 @@ watch(() => pagination.value.query, fetchPatients);
             </div>
             <div class="cell-data">{{ patient.card_no }}</div>
             <div class="cell-data">{{ patient.sex }}</div>
-            <div class="cell-data">{{ patient.phone }}</div>
+            <div class="cell-data cell-size-1">{{ patient.phone }}</div>
             <div class="cell-data cell-size-1">{{ patient.current_appointment }}</div>
             <div class="cell-data">
               <ActionButton v-on:click="deletItem(patient.id)" :icon-src="TrashIcon">Delete</ActionButton>

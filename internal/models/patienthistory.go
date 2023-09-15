@@ -13,6 +13,7 @@ type PatientHistory struct {
 	PatientID string                 `gorm:"not null;references:patients(id)" json:"-"`
 	Date      *time.Time             `gorm:"default:null" json:"date_time"`
 	Type      string                 `gorm:"not null" json:"type"`
+	Document  string                 `gorm:"default:null" json:"document"`
 	Details   map[string]interface{} `gorm:"serializer:json" json:"details"`
 	Patient   *Patient               `json:"patient"`
 }

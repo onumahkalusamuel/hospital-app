@@ -31,7 +31,6 @@ type Invoice struct {
 type InvoiceDetails struct {
 	Description string `json:"description"`
 	Qty         uint   `json:"qty"`
-	Unit        string `json:"unit"`
 	Price       uint   `json:"price"`
 	Amount      uint   `json:"amount"`
 }

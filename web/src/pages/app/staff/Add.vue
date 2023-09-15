@@ -14,7 +14,7 @@ import { toasts } from '@/stores/toasts';
 
 const breadcrumbs = ref([
   { title: "Dashboard", link: { name: "dashboard" } },
-  { title: "Staff",  link: { name: "staff" } },
+  { title: "Staff", link: { name: "staff" } },
   { title: "Add staff", current: true },
 ] as BreadcrumbItem[]);
 
@@ -25,9 +25,9 @@ const create = async () => {
   const formData = Object.fromEntries(new FormData(createForm.value as never as HTMLFormElement).entries()) as never as Staff;
   formData.role *= 1;
   const create = await apiRequest.post('staff', formData);
-  if(create.id) {
-    toasts.addToast({message: "account created successfully.", type: 'success'});
-    router.push({ name: 'view-staff', params: { id: create.id } })
+  if (create.id) {
+    toasts.addToast({ message: "account created successfully.", type: 'success' });
+    router.push({ name: 'staff' })
   }
 }
 </script>;
@@ -38,22 +38,42 @@ const create = async () => {
     <PageHeader title="New Staff" :icon-src="UserPlusIcon"></PageHeader>
     <hr class="ml-4 mr-4" />
     <div class="page-scroll-area">
-      <form method="POST" v-on:submit.prevent="create" class="form flex flex-wrap gap-3 pl-4" ref="createForm">
-        <div class="min-w-[250px]"><SelectField label="Role" name="role" :options="[['Nurse', 3],['Doctor', 2]]" required/></div>
-        <div class="min-w-[250px]"><TextField label="First Name" placeholder="John" name="firstname" required></TextField></div>
-        <div class="min-w-[250px]"><TextField label="Middle Name" placeholder="M." name="middlename"></TextField></div>
-        <div class="min-w-[250px]"><TextField label="Last Name" placeholder="Doe" name="lastname" required></TextField></div>
-        <div class="min-w-[250px]"><SelectField label="Sex" name="sex" :options="[['Male'], ['Female']]" required/></div>
-        <div class="min-w-[250px]"><TextField label="Phone Number" placeholder="08123456789" name="phone" type="tel"></TextField></div>
-        <div class="min-w-[250px]"><TextField label="Email Address" placeholder="john.doe@example.com" name="email"></TextField></div>
-        <div class="min-w-[250px]"><TextField label="Username" placeholder="Username" name="username" required></TextField></div>
-        <div class="min-w-[250px]"><TextField label="Password" placeholder="Password" name="password" required></TextField></div>
-        <div class="w-full"></div>
-        <div class="min-w-[250px] flex space-x-3">
+      <form method="POST" v-on:submit.prevent="create" class="p-5" ref="createForm">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <SelectField label="Role" name="role" :options="[['Nurse', 3], ['Doctor', 2]]" required />
+          </div>
+          <div>
+            <TextField label="First Name" placeholder="John" name="firstname" required></TextField>
+          </div>
+          <div>
+            <TextField label="Middle Name" placeholder="M." name="middlename"></TextField>
+          </div>
+          <div>
+            <TextField label="Last Name" placeholder="Doe" name="lastname" required></TextField>
+          </div>
+          <div>
+            <SelectField label="Sex" name="sex" :options="[['Male'], ['Female']]" required />
+          </div>
+          <div>
+            <TextField label="Phone Number" placeholder="08123456789" name="phone" type="tel"></TextField>
+          </div>
+          <div>
+            <TextField label="Email Address" placeholder="john.doe@example.com" name="email"></TextField>
+          </div>
+        <div>
+          <TextField label="Username" placeholder="Username" name="username" required></TextField>
+        </div>
+        <div>
+          <TextField label="Password" placeholder="Password" name="password" required></TextField>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="flex gap-2 mt-5">
           <PrimaryButton type="submit" class="w-full">Submit</PrimaryButton>
           <SecondaryButton type="button" class="w-full" v-on:click.prevent="()=>$router.go(-1)">Cancel</SecondaryButton>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
-</template>
+</div></template>

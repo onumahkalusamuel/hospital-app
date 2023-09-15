@@ -9,12 +9,12 @@ import { toasts } from '@/stores/toasts';
 const router = useRouter();
 const createadmin = ref(null);
 
-onMounted(async() => {
+onMounted(async () => {
   try {
     const req = await apiRequest.get('hospital-details');
-    if(req) { router.push({name: 'login'})}
+    if (req) { router.push({ name: 'login' }) }
 
-  } catch(e) {
+  } catch (e) {
     console.log(e)
   }
 });
@@ -22,23 +22,23 @@ onMounted(async() => {
 const createAdmin = async () => {
   const formData = new FormData(createadmin.value as never as HTMLFormElement)
   const createAdmin = await apiRequest.post('create-admin', Object.fromEntries(formData.entries()));
-  if(createAdmin.message) {
-    toasts.addToast({message: createAdmin.message, type: 'success'});
-    router.push({name: 'hospital-setup'})
+  if (createAdmin.message) {
+    toasts.addToast({ message: createAdmin.message, type: 'success' });
+    router.push({ name: 'hospital-setup' })
   }
 }
 </script>;
 
 <template>
-    <p class="text-xl">Create Super Admin</p>
-    <form method="post" v-on:submit.prevent="createAdmin" ref="createadmin">
-      <div>
-        <TextField name="firstname" placeholder="First Name" class="w-full mb-2" />
-        <TextField name="lastname" placeholder="Last Name" class="w-full mb-2"/>
-        <TextField name="username" placeholder="Username" class="w-full mb-2"/>
-        <TextField name="password" placeholder="Password" class="w-full mb-2"/>
-        <PrimaryButton class="w-full mb-2" type="submit">Create Super Admin</PrimaryButton>
-      </div>
-    </form>
-    <small>The super admin is the first user on the app. The account will have access to every section of the app.</small>
+  <p class="text-xl">Create Super Admin</p>
+  <form method="post" class="py-5" v-on:submit.prevent="createAdmin" ref="createadmin">
+    <div class="space-y-2">
+      <TextField name="firstname" placeholder="First Name" class="w-full" />
+      <TextField name="lastname" placeholder="Last Name" class="w-full" />
+      <TextField name="username" placeholder="Username" class="w-full" />
+      <TextField name="password" placeholder="Password" class="w-full" />
+      <PrimaryButton class="w-full" type="submit">Create Super Admin</PrimaryButton>
+    </div>
+  </form>
+  <small>The super admin is the first user on the app. The account will have access to every section of the app.</small>
 </template>

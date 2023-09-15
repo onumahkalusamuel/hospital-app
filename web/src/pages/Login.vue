@@ -3,7 +3,6 @@ import PrimaryButton from '@/components/form/PrimaryButton.vue';
 import TextField from '@/components/form/TextField.vue';
 import apiRequest from '@/services/http/api-requests';
 import { auth } from '@/stores/auth';
-import { toasts } from '@/stores/toasts';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import VueQrcode from '@chenfengyuan/vue-qrcode';
@@ -18,19 +17,19 @@ const remoteAddress = ref('');
 onMounted(async () => {
   auth.setJwt("");
   try {
-      const req = await apiRequest.get("hospital-details");
-      if (req) {
-          hospital_name.value = req.hospital_name;
-          hospital_address.value = req.hospital_address;
-          hospital_logo.value = req.hospital_logo;
-      }
+    const req = await apiRequest.get("hospital-details");
+    if (req) {
+      hospital_name.value = req.hospital_name;
+      hospital_address.value = req.hospital_address;
+      hospital_logo.value = `${req.asset_base_url}/files/logo/${req.hospital_logo}`;
+    }
 
-      const remote = await apiRequest.get("get-remote-address");
-      console.log(remote);
-      if(remote.address) remoteAddress.value = remote.address;
+    const remote = await apiRequest.get("get-remote-address");
+    console.log(remote);
+    if (remote.address) remoteAddress.value = remote.address;
   }
   catch (e) {
-      console.log(e);
+    console.log(e);
   }
 })
 
@@ -39,37 +38,34 @@ const login = async () => {
   const login = await apiRequest.post("login", Object.fromEntries(formData.entries()));
   if (login.message) {
     auth.setJwt(login.jwt);
-    toasts.addToast({ message: 'Login successful', title: 'Success', type: 'success' })
     router.push({ name: "dashboard" });
   }
 }
 </script>;
 
 <template>
-  <div class="h-screen flex flex-col sm:flex-row">
-    <div class="bg-[url('/hospital-image.png')] bg-cover bg-no-repeat sm:flex-1"></div>
-    <div class="p-5 flex flex-col w-[400px] h-screen justify-between mx-auto">
-      <div class="flex justify-between items-center">
-        <div class="w-full">
-          <div class="text-2xl">{{ hospital_name }}</div>
-          <div v-if="hospital_address" class="mt-1">{{ hospital_address }}</div>
-        </div>
-        <div class="logo">
-          <img :src="hospital_logo" class="max-w-[70px]" alt="logo">
-        </div>
-      </div>
-      <div class="hidden flex-col items-center text-xl font-bold sm:flex" v-if="remoteAddress">
+  <div class="h-screen flex flex-row">
+    <div
+      class="bg-[url('/hospital-image.png')] bg-cover bg-no-repeat md:flex-1 h-screen md:flex hidden justify-center items-center bg-[#0078d4]">
+      <div class="text-xl text-center font-bold text-white bg-[#0078d4] border-[5px] border-white p-[15px]" v-if="remoteAddress">
         <vue-qrcode :value="remoteAddress" :options="{ width: 200 }"></vue-qrcode>
-        <div>SCAN WITH PHONE</div>
+        <div class="pt-[10px]">SCAN WITH PHONE</div>
       </div>
-      <div class="form-proper">
-        <p class="text-xl mt-10 mb-4">Login to continue</p>
-        <form v-on:submit.prevent="login" ref="loginForm" autocomplete="off">
-          <TextField class="mb-2" name="username" placeholder="Username" required/>
-          <TextField class="mb-2" name="password" placeholder="Password" type="password" required />
-          <PrimaryButton type="submit">Login</PrimaryButton>
-        </form>
-        <div class="text-center mt-5"><small>HCMS v1.0.0</small></div>
+    </div>
+    <div class="p-5 flex flex-col justify-between flex-1">
+      <div class="m-auto w-[24rem] flex flex-col h-screen justify-center">
+        <div class="">
+          <img :src="hospital_logo" class="max-w-[60px] my-[20px]" alt="logo">
+          <div class="text-2xl mb-[40px]">Sign in to your account</div>
+        </div>
+        <div class="form-proper">
+          <form v-on:submit.prevent="login" ref="loginForm" autocomplete="off" class="py-md">
+            <TextField name="username" label="Username" required />
+            <TextField name="password" label="Password" type="password" required />
+            <PrimaryButton type="submit">Sign in</PrimaryButton>
+          </form>
+          <div class="text-center mt-5"><small>HCMS v1.1.0</small></div>
+        </div>
       </div>
     </div>
   </div>
