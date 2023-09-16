@@ -30,7 +30,7 @@ const admitPatient = async () => {
   <pop-up title="Admit Patient" :id="popupId">
     <form method="POST" v-on:submit.prevent="admitPatient" ref="admitPatientRef">
       <div class="flex gap-x-3">
-        <div class="w-full"><TextField label="Ward Name" placeholder="Maternity Ward" name="ward_name" required></TextField></div>
+        <div class="w-full"><TextField label="Ward Name" placeholder="Maternity Ward" name="ward_number" required></TextField></div>
         <div class="w-full"><TextField label="Room Number" placeholder="R-024" name="room_number" required></TextField></div>
       </div>
       <div class="flex">

@@ -9,29 +9,40 @@ import (
 
 type PatientHistory struct {
 	BaseModel
-	StaffID   string                 `gorm:"not null;references:staffs(id)" json:"-"`
-	PatientID string                 `gorm:"not null;references:patients(id)" json:"-"`
-	Date      *time.Time             `gorm:"default:null" json:"date_time"`
-	Type      string                 `gorm:"not null" json:"type"`
-	Document  string                 `gorm:"default:null" json:"document"`
-	Details   map[string]interface{} `gorm:"serializer:json" json:"details"`
-	Patient   *Patient               `json:"patient"`
+	StaffID   string         `gorm:"not null;references:staffs(id)" json:"-"`
+	PatientID string         `gorm:"not null;references:patients(id)" json:"patient_id"`
+	Subject   string         `gorm:"default:null" json:"subject"`
+	Date      *time.Time     `gorm:"default:null" json:"date_time"`
+	Details   HistoryDetails `gorm:"serializer:json" json:"details"`
+	Patient   *Patient       `json:"patient"`
 }
 
-/*
-Types:
-payment (payment id, invoice id, payment amount, balance),
-invoice (invoice id, amount, status),
-note (subject, body),
-admit (ward, room),
-discharge (room),
-history (note),
-examination (note, image),
-test-result (note, image),
-diagnosis (note, image),
-treatment (),
-prescription (drug, dosage, frequency, timeline),
-*/
+type HistoryDetails struct {
+	General     DetailsInner     `json:"general"`
+	Appointment AppointmentInner `json:"appointment"`
+	Admission   AdmissionInner   `json:"admission"`
+	Discharge   DetailsInner     `json:"discharge"`
+	Diagnosis   DetailsInner     `json:"diagnosis"`
+	Examination DetailsInner     `json:"examination"`
+	TestResult  DetailsInner     `json:"testresult"`
+	Treatment   DetailsInner     `json:"treatment"`
+}
+
+type DetailsInner struct {
+	Note     string `json:"note"`
+	Document string `json:"document"`
+}
+
+type AdmissionInner struct {
+	DetailsInner
+	WardNumber string `json:"ward_number"`
+	RoomNumber string `json:"room_number"`
+}
+
+type AppointmentInner struct {
+	DetailsInner
+	AppointmentType string `json:"appointment_type"`
+}
 
 func (m *PatientHistory) Create() error {
 	return config.DB.Create(&m).Error

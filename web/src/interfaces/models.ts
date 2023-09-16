@@ -1,8 +1,8 @@
-import { PatientHistoryTypes, RoleTypes } from '.';
+import { RoleTypes } from ".";
 
 export interface Patient {
   id: string;
-  created_at: Date,
+  created_at: Date;
   card_no: string | number;
   title: string;
   firstname: string;
@@ -24,7 +24,7 @@ export interface Patient {
 
 export interface Delivery {
   id: string;
-  patient_id: string,
+  patient_id: string;
   delivery_date_time: string;
   delivery_mode: string;
   baby_sex: string;
@@ -83,10 +83,9 @@ export interface Payment {
 export interface PatientHistory {
   id: string;
   patient_id: string;
+  subject: string;
   date_time: string;
-  type: PatientHistoryTypes;
-  document: string;
-  details: { [key: string]: any; };
+  details: { [key: string]: { [key: string]: any } };
   patient?: Patient;
 }
 
@@ -97,7 +96,7 @@ export interface Settings {
 
 export interface Staff {
   id: string;
-  created_at?: Date,
+  created_at?: Date;
   firstname: string;
   middlename: string;
   lastname: string;
@@ -109,7 +108,6 @@ export interface Staff {
   password?: string;
 }
 
-
 export interface Pagination {
   limit: number;
   page: number;
@@ -118,5 +116,5 @@ export interface Pagination {
   sort_order: "asc" | "desc";
   total_pages: number;
   total_rows: number;
-  query: '';
+  query: "";
 }

@@ -9,49 +9,67 @@ import TextArea from '@/components/form/TextArea.vue';
 import PrimaryButton from '@/components/form/PrimaryButton.vue';
 import SecondaryButton from '@/components/form/SecondaryButton.vue';
 import { Patient, PatientHistoryTypes } from '@/interfaces';
+import CheckboxField from '@/components/form/CheckboxField.vue';
 
 defineProps<{ popupId: string, patient: Patient }>()
 const addHistoryRef = ref(null);
 const route = useRoute();
 const emit = defineEmits(["update:closed"]);
-const historyTypes = ref(['General', 'Diagnosis', 'Examination', 'TestResult', 'Treatment'] as PatientHistoryTypes[]);
+const historyTypes = ref(['General', 'Appointment', 'Admission', 'Discharge', 'Diagnosis', 'Examination', 'TestResult', 'Treatment'] as PatientHistoryTypes[]);
 
 const addHistory = async () => {
     const formData = new FormData(addHistoryRef.value as never as HTMLFormElement)
     const admit = await apiRequest.postMulti(`patients/${route.params.id}/patient-history`, formData);
+
     if (admit.id) {
-        toasts.addToast({ message: "history admitted successfully.", type: 'success' });
+        toasts.addToast({ message: "history created successfully.", type: 'success' });
         emit('update:closed');
         popupStore.show = false;
     }
 }
 
-const selectedType = ref('General' as PatientHistoryTypes);
-const setHistoryType = (type: PatientHistoryTypes) => {
-    selectedType.value = type;
-}
+const activeTab = ref('General' as PatientHistoryTypes);
 
 </script>
 <template>
-    <pop-up :width="600" :title="`${patient.lastname} ${patient.firstname} - Add History`" :id="popupId">
+    <pop-up :width="920" :title="`${patient.lastname} ${patient.firstname} - Add History`" :id="popupId"
+        pop-class="min-h-[95vh]">
         <form method="POST" v-on:submit.prevent="addHistory" ref="addHistoryRef" enctype="multipart/form-data">
+            <div class="pb-3">
+                <TextField label="Subject" placeholder="Subject of history" name="subject" required></TextField>
+            </div>
             <div>
-                <div class="font-bold py-2">Select History Type <span class="text-red-500">*</span></div>
-                <div class="w-full flex flex-wrap mb-3 gap-3">
-                    <div v-for="(type, i) in historyTypes" :key="i" class="cursor-pointer p-2 px-2 border-[1px] rounded"
-                        :class="selectedType == type ? 'bg-blue-600 border-blue-600 text-white' : 'border-gray-400'"
-                        @click="() => setHistoryType(type)"> {{ type }} </div>
-                </div>
-                <input type="hidden" v-model="selectedType" name="type" />
+                <CheckboxField :options="historyTypes" label="History Type" v-model="activeTab" />
             </div>
 
-            <div class="flex">
-                <div class="w-full"><TextArea label="Note" placeholder="Note" name="note" rows="5"></TextArea></div>
+            <div class="flex flex-col py-3 gap-y-3" v-for="history, index in historyTypes" :key="index"
+                :class="activeTab == history ? '' : 'hidden'">
+                <div class="flex gap-x-3 w-full" v-if="history == 'Admission'">
+                    <div class="w-full">
+                        <TextField label="Ward Name" placeholder="Maternity Ward" name="details[admission][ward_number]">
+                        </TextField>
+                    </div>
+                    <div class="w-full">
+                        <TextField label="Room Number" placeholder="R-024" name="details[admission][room_number]">
+                        </TextField>
+                    </div>
+                </div>
+                <div class="flex gap-x-3 w-full" v-if="history == 'Appointment'">
+                    <div class="w-full">
+                        <CheckboxField :options="['Emergency', 'Regular']" label="Appointment Type"
+                            name="details[appointment][appointment_type]" />
+                    </div>
+                </div>
+                <div class="flex gap-x-3 w-full">
+                    <div class="w-full"><TextArea :label="`${history} Note`" :placeholder="`${history} Note`"
+                            :name="`details[${history.toLowerCase()}][note]`" rows="2"></TextArea></div>
+                    <div class="w-full">
+                        <TextField class="flex h-[65%]" :label="`Document (.png, .jpg, .jpeg)`" type="file"
+                            :name="`details[${history.toLowerCase()}][document]`" accept=".png, .jpg, .jpeg"></TextField>
+                    </div>
+                </div>
             </div>
-            <div class="w-full my-5">
-                <TextField label="Document (.png, .jpg, .jpeg)" type="file" name="document" accept=".png, .jpg, .jpeg">
-                </TextField>
-            </div>
+
             <div class="flex gap-3 mt-5">
                 <div>
                     <PrimaryButton type="submit">Submit</PrimaryButton>

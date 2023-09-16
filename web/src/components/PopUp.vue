@@ -2,7 +2,7 @@
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 import { popupStore } from '@/stores';
 
-defineProps<{ id: string; title: string, width?: number }>();
+defineProps<{ id: string; title: string, width?: number, popClass?: string }>();
 const close = () => {
   popupStore.id = '';
   popupStore.show = false;
@@ -11,7 +11,7 @@ const close = () => {
 <template>
   <div class="bg-[#00000043] h-screen absolute top-0 w-full flex justify-center items-center"
     v-if="popupStore.show && popupStore.id == id" @click.self="close">
-    <div :class="width ? `w-[${width}px]` : 'w-[500px]'"
+    <div :class="width ? `w-[${width}px] ${popClass}` : `w-[500px] ${popClass}`"
       class="bg-white min-w-[500px] min-h-[50px] mb-2 p-2 border-[1px] rounded">
       <div class="header flex justify-between items-center w-full px-2">
         <div class="font-bold pt-2 pb-1">{{ title }}</div>
@@ -32,8 +32,7 @@ const close = () => {
   scrollbar-width: none;
 }
 
-.popup-scroll-area::-webkit-scrollbar{
+.popup-scroll-area::-webkit-scrollbar {
   display: none;
 }
-
 </style>

@@ -59,6 +59,9 @@ body {
   width: 290px;
 }
 
+.cell-size-3 {
+  width: 350px;
+}
 /* PAGE SETUP */
 .page-wrapper {
   display: flex;

@@ -12,7 +12,6 @@ import Paging from '@/components/Paging.vue';
 import { useDebounce } from '@/utils/debounce';
 import DeliveryViewPopup from './popups/DeliveryViewPopup.vue';
 import { popupStore } from '@/stores';
-import dayjs from 'dayjs';
 import CheckboxField from '@/components/form/CheckboxField.vue';
 const debounce = useDebounce()
 
@@ -95,7 +94,6 @@ watch(() => filters.value.delivery_mode, fetch);
           <div class="cell-data">Sex</div>
           <div class="cell-data">Baby Weight</div>
           <div class="cell-data cell-size-1">Condition.</div>
-          <div class="cell-data cell-size-1">Delivery Time</div>
           <div class="cell-data">Actions</div>
         </div>
         <div class="table-body">
@@ -110,11 +108,10 @@ watch(() => filters.value.delivery_mode, fetch);
             <div class="cell-data">{{ delivery.baby_sex }}</div>
             <div class="cell-data">{{ delivery.baby_weight }} kg</div>
             <div class="cell-data cell-size-1">{{ delivery.condition }}</div>
-            <div class="cell-data cell-size-1">{{ dayjs(delivery.delivery_date_time).format('DD-MM-YYYY hh:mm A') }}</div>
-            <div class="cell-data">
-              <ActionButton @click="() => $router.push({ name: 'view-delivery', params: { id: delivery.id } })"
+            <div class="cell-data gap-x-2">
+              <ActionButton outline @click="() => $router.push({ name: 'view-delivery', params: { id: delivery.id } })"
                 :icon-src="PencilIcon">Edit</ActionButton>
-              <ActionButton v-on:click="deletItem(delivery.id)" :icon-src="TrashIcon">Delete</ActionButton>
+              <ActionButton outline v-on:click="deletItem(delivery.id)" :icon-src="TrashIcon">Delete</ActionButton>
             </div>
           </div>
         </div>

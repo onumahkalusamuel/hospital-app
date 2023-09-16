@@ -93,8 +93,8 @@ watch(() => pagination.value.query, fetchInvoices);
             <div class="cell-data">{{ invoice.amount.toLocaleString("en-US") }}</div>
             <div class="cell-data">{{ invoice.completed ? 'paid' : 'pending' }}</div>
             <div class="cell-data cell-size-1">{{ dayjs(invoice.due_date).format('DD-MM-YYYY hh:mm A') }}</div>
-            <div class="cell-data">
-              <ActionButton v-if="user.role == '1'" v-on:click="deletItem(invoice.id)" :icon-src="TrashIcon">Delete</ActionButton>
+            <div class="cell-data gap-x-2">
+              <ActionButton outline v-if="user.role == '1'" v-on:click="deletItem(invoice.id)" :icon-src="TrashIcon">Delete</ActionButton>
             </div>
           </div>
         </div>

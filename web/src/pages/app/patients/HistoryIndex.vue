@@ -63,7 +63,6 @@ const fetchPatientHistory = async () => {
 }
 
 const fetchPatient = async () => {
-  // pHistory.value = await apiRequest.get(`patients/${route.params.id}/patient-history`);
   patient.value = await apiRequest.get(`patients/${route.params.id}`);
   await fetchPatientHistory();
 }
@@ -82,10 +81,9 @@ watch(() => pagination.value.query, fetchPatientHistory);
     <div class=" text-xl">History Details</div>
     <div class="flex gap-2">
       <ActionButton dark @click="showAddHistoryPopup" :icon-src="BookOpenIcon">Add history</ActionButton>
-      <ActionButton outline @click="showDownloadHistoryPopup" :icon-src="ArrowDownIcon">Download</ActionButton>
+      <ActionButton dark @click="showDownloadHistoryPopup" :icon-src="ArrowDownIcon">Download</ActionButton>
     </div>
   </div>
-
   <hr />
   <div class="page-scroll-area">
     <div v-if="!pagination.rows.length">
@@ -95,35 +93,25 @@ watch(() => pagination.value.query, fetchPatientHistory);
     <div v-else class="table">
       <div class="table-row table-header">
         <div class="cell-data cell-sn">S/N</div>
+        <div class="cell-data cell-size-3">Subject</div>
         <div class="cell-data cell-size-1">Date</div>
-        <div class="cell-data">Type</div>
-        <div class="cell-data cell-size-2">Note</div>
-
         <div class="cell-data">Actions</div>
       </div>
       <div class="table-body">
         <div class="table-row" v-for="history, i in pagination.rows" :key="patient.id">
           <div class="cell-data cell-sn">{{ i + 1 }}.</div>
-          <div class="cell-data cell-size-1">
+          <div class="cell-data cell-size-3">
             <router-link class="text-blue-600 hover:underline" to="#" @click="viewHistory(history)">
-              {{ dayjs(history.date_time).format('DD-MM-YYYY hh:mm A') }}
+              {{ history.subject }}
             </router-link>
           </div>
-          <div class="cell-data">{{ history.type }}</div>
-          <div class="cell-data cell-size-2">
-            <div>
-              <div v-if="history.type == 'Appointment'"><strong>Type:</strong> {{ history.details.appointment_type }}</div>
-              <div v-if="history.type == 'Admission'">
-                <strong>Ward:</strong> {{ history.details.ward_number }};
-                <strong>Room:</strong> {{ history.details.room_number }}
-              </div>
-              <div>{{ history.details.note }}</div>
-            </div>
+          <div class="cell-data cell-size-1">
+            {{ dayjs(history.date_time).format('DD-MM-YYYY hh:mm A') }}
           </div>
-          <div class="cell-data">
-            <ActionButton v-on:click="editHistory(history)" :icon-src="PencilIcon">Edit
+          <div class="cell-data gap-x-2">
+            <ActionButton v-on:click="editHistory(history)" :icon-src="PencilIcon" outline>Edit
             </ActionButton>
-            <ActionButton v-if="user.role == '1'" @click="deletItem(history.id)" :icon-src="TrashIcon">Delete
+            <ActionButton outline v-if="user.role == '1'" @click="deletItem(history.id)" :icon-src="TrashIcon">Delete
             </ActionButton>
           </div>
         </div>

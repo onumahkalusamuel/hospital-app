@@ -110,7 +110,7 @@ watch(() => pagination.value.query, fetch);
                         <div class="cell-data cell-size-1">{{ delivery.condition }}</div>
                         <div class="cell-data cell-size-1">{{ delivery.delivery_date_time }}</div>
                         <div class="cell-data">
-                            <ActionButton v-on:click="deletItem(delivery.id)" :icon-src="TrashIcon">Delete</ActionButton>
+                            <ActionButton outline v-on:click="deletItem(delivery.id)" :icon-src="TrashIcon">Delete</ActionButton>
                         </div>
                     </div>
                 </div>

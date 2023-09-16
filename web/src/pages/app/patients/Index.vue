@@ -93,8 +93,8 @@ watch(() => pagination.value.query, fetchPatients);
             <div class="cell-data">{{ patient.sex }}</div>
             <div class="cell-data cell-size-1">{{ patient.phone }}</div>
             <div class="cell-data cell-size-1">{{ patient.current_appointment }}</div>
-            <div class="cell-data">
-              <ActionButton v-on:click="deletItem(patient.id)" :icon-src="TrashIcon">Delete</ActionButton>
+            <div class="cell-data gap-x-2">
+              <ActionButton outline v-on:click="deletItem(patient.id)" :icon-src="TrashIcon" >Delete</ActionButton>
             </div>
           </div>
         </div>

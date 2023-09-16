@@ -2,7 +2,7 @@
 import ActionButton from '@/components/ActionButton.vue';
 import apiRequest from '@/services/http/api-requests';
 import { Patient, PatientHistory } from '@/interfaces';
-import { DocumentArrowDownIcon } from '@heroicons/vue/24/solid';
+import { DocumentArrowDownIcon, EyeIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/outline';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -89,34 +89,50 @@ onMounted(async () => {
           <td class="border-[1px] border-black p-1">{{ patient.marital_status }}</td>
         </tr>
         <tr>
-          <th class="border-[1px] border-black p-1">Age.</th>
+          <th class="border-[1px] border-black p-1">Age</th>
           <td class="border-[1px] border-black p-1">{{ patient.age ?? 0 }} yrs</td>
           <th class="border-[1px] border-black p-1">Appointment</th>
           <td class="border-[1px] border-black p-1">{{ patient.current_appointment }}</td>
-          <th class="border-[1px] border-black p-1">Status</th>
-          <td class="border-[1px] border-black p-1">{{ patient.current_status }}</td>
+          <th class="border-[1px] border-black p-1">Registered</th>
+          <td class="border-[1px] border-black p-1">{{ dayjs(patient.created_at).format('DD-MM-YYYY hh:mm A') }}</td>
         </tr>
       </table>
-
       <!-- Record Proper -->
       <div class="text-2xl text-center">History Details</div>
       <table class="w-full border-separate border text-left">
         <tr>
           <th class="border-[1px] border-black p-1 w-[45px] text-center">S/N</th>
           <th class="border-[1px] border-black p-1 w-[150px]">Date</th>
-          <th class="border-[1px] border-black p-1 w-[100px]">Type</th>
           <th class="border-[1px] border-black p-1">Details</th>
         </tr>
         <tr v-if="records.length" v-for="history, i in records" :key="patient.id">
-          <td class="border-[1px] border-black p-1 text-center">{{ i + 1 }}</td>
-          <td class="border-[1px] border-black p-1">{{ dayjs(history.date_time).format('DD-MM-YYYY hh:mm A') }}</td>
-          <td class="border-[1px] border-black p-1"> {{ history.type }}</td>
+          <td class="border-[1px] border-black p-1 text-center align-top p-2">{{ i + 1 }}</td>
+          <td class="border-[1px] border-black p-1 align-top align-top p-2">
+           <div>{{ dayjs(history.date_time).format('DD-MM-YYYY') }}</div>
+            <div>{{ dayjs(history.date_time).format('hh:mm A') }}</div>
+          </td>
           <td class="border-[1px] border-black p-1">
-            <div>
-              <div>{{ history.details.note }}</div>
-              <div v-if="history.type == 'Admission'"> Ward: {{ history.details.ward_number }}; Room: {{
-                history.details.room_number }}</div>
-              <div v-if="history.type == 'Appointment'"> Appt: {{ history.details.appointment_type }}</div>
+            <div class="text-xl font-bold uppercase text-center"> {{ history.subject }}</div>
+            <div v-for="details, j in history.details" :key="i" class="border-[1px] border-stone-900 p-3 my-3">
+              <div class="underline uppercase font-bold pb-2">{{ j }}</div>
+              <div>{{ details.note }}</div>
+              <div v-if="j == 'admission'"> Ward: {{ details.ward_number }}; Room: {{
+                details.room_number }}</div>
+              <div v-if="j == 'appointment'"> Appt: {{ details.appointment_type }}</div>
+              <div v-if="details.document" class="flex justify-right">
+                <div class="py-1 mt-2 rounded justify-center">
+                  <a class="text-white bg-blue-700 hover:bg-blue-800 flex gap-x-2 items-center rounded px-3 py-2" target="_blank" :href="`${hospital.asset_base_url}/files/images_${patient.id}/${details.document}`">
+                    <EyeIcon class="w-5 h-5" />
+                    View document
+                  </a>
+                  <!-- <div>
+                    <img class="max-h-[200px]"
+                      :src="`${hospital.asset_base_url}/files/images_${patient.id}/${details.document}`"
+                      alt="Document" />
+                  </div> -->
+
+                </div>
+              </div>
             </div>
           </td>
         </tr>

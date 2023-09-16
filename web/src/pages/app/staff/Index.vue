@@ -100,10 +100,10 @@ watch(() => pagination.value.query, fetchStaff);
             </div>
             <div class="cell-data">{{ Roles[st.role as 1 | 2 | 3] }}</div>
             <div class="cell-data">{{ st.username }}</div>
-            <div class="cell-data">
+            <div class="cell-data gap-x-2">
               <ActionButton @click="() => $router.push({ name: 'view-staff', params: { id: st.id } })"
-                :icon-src="PencilIcon">Edit</ActionButton>
-              <ActionButton v-if="st.role > 1" @click="deleteItem(st.id)" :icon-src="TrashIcon">Delete</ActionButton>
+                :icon-src="PencilIcon" outline>Edit</ActionButton>
+              <ActionButton outline v-if="st.role > 1" @click="deleteItem(st.id)" :icon-src="TrashIcon">Delete</ActionButton>
             </div>
           </div>
         </div>

@@ -37,11 +37,11 @@ func InitiateAppointment(c echo.Context) error {
 	patientHistory := models.PatientHistory{
 		StaffID:   c.Get("ID").(string),
 		PatientID: patient.ID,
-		Type:      "Appointment",
-		Details: echo.Map{
-			"appointment_type": req.AppointmentType,
-			"note":             req.Note,
-		},
+		// Type:      "Appointment",
+		// Details: echo.Map{
+		// 	"appointment_type": req.AppointmentType,
+		// 	"note":             req.Note,
+		// },
 		Date: &now,
 	}
 

@@ -10,7 +10,7 @@ import (
 )
 
 type AdmitPatientRequest struct {
-	WardName   string `json:"ward_name"`
+	WardNumber string `json:"ward_number"`
 	RoomNumber string `json:"room_number"`
 	Note       string `json:"note"`
 }
@@ -38,12 +38,12 @@ func AdmitPatient(c echo.Context) error {
 	patientHistory := models.PatientHistory{
 		StaffID:   c.Get("ID").(string),
 		PatientID: patient.ID,
-		Type:      "Admission",
-		Details: echo.Map{
-			"room_number": req.RoomNumber,
-			"ward_number": req.WardName,
-			"note":        req.Note,
-		},
+		// Type:      "Admission",
+		// Details: echo.Map{
+		// 	"room_number": req.RoomNumber,
+		// 	"ward_number": req.WardNumber,
+		// 	"note":        req.Note,
+		// },
 		Date: &now,
 	}
 

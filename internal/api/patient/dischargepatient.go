@@ -32,10 +32,10 @@ func DischargePatient(c echo.Context) error {
 	patientHistory := models.PatientHistory{
 		StaffID:   c.Get("ID").(string),
 		PatientID: patient.ID,
-		Type:      "Discharge",
-		Details: echo.Map{
-			"note": req.Note,
-		},
+		// Type:      "Discharge",
+		// Details: echo.Map{
+		// 	"note": req.Note,
+		// },
 		Date: &now,
 	}
 

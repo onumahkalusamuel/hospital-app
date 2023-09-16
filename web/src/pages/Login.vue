@@ -64,7 +64,7 @@ const login = async () => {
             <TextField name="password" label="Password" type="password" required />
             <PrimaryButton type="submit">Sign in</PrimaryButton>
           </form>
-          <div class="text-center mt-5"><small>HCMS v1.1.0</small></div>
+          <div class="text-center mt-5"><small>HCMS v1.1.2</small></div>
         </div>
       </div>
     </div>

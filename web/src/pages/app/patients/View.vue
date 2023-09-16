@@ -7,7 +7,11 @@ import { Patient } from '@/interfaces'
 import HistoryIndex from './HistoryIndex.vue';
 import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
-import { UserIcon, PencilIcon, EyeIcon, FolderPlusIcon, FolderMinusIcon, UserGroupIcon, BanknotesIcon, PhoneArrowUpRightIcon } from '@heroicons/vue/24/solid'
+import { UserIcon, PencilIcon, EyeIcon, 
+  // FolderPlusIcon, FolderMinusIcon,
+   UserGroupIcon, BanknotesIcon,
+    // PhoneArrowUpRightIcon
+   } from '@heroicons/vue/24/solid'
 import { popupStore } from '@/stores';
 import AdmitPatientPopup from './popups/AdmitPatientPopup.vue';
 import DischargePatientPopup from './popups/DischargePatientPopup.vue';
@@ -36,9 +40,9 @@ const fetchPatient = async () => {
   displayKey.value++;
 }
 
-const showAdmitPatientPopup = () => { popupStore.id = admitPatientPopupId.value; popupStore.show = true; }
-const showDischargePatientPopup = () => { popupStore.id = dischargePatientPopupId.value; popupStore.show = true; }
-const showAppointmentPopup = () => { popupStore.id = appointmentPopupId.value; popupStore.show = true; }
+// const showAdmitPatientPopup = () => { popupStore.id = admitPatientPopupId.value; popupStore.show = true; }
+// const showDischargePatientPopup = () => { popupStore.id = dischargePatientPopupId.value; popupStore.show = true; }
+// const showAppointmentPopup = () => { popupStore.id = appointmentPopupId.value; popupStore.show = true; }
 const showPatientViewPopup = () => { popupStore.id = viewPatientPopupId.value; popupStore.show = true; }
 
 onMounted(async () => { await fetchPatient() });
@@ -52,23 +56,23 @@ onMounted(async () => { await fetchPatient() });
       :icon-src="UserIcon">
 
       <div class="">
-        <div class="w-[500px] grid grid-cols-3 gap-2">
-          <ActionButton outline @click="showPatientViewPopup" :icon-src="EyeIcon">View</ActionButton>
-          <ActionButton outline v-on:click="() => $router.push({ name: 'edit-patient' })" :icon-src="PencilIcon">Edit
+        <div class="grid grid-cols-2 gap-2">
+          <ActionButton dark @click="showPatientViewPopup" :icon-src="EyeIcon">View</ActionButton>
+          <ActionButton dark v-on:click="() => $router.push({ name: 'edit-patient' })" :icon-src="PencilIcon">Edit
           </ActionButton>
-          <ActionButton outline v-if="'Admitted' !== patient.current_status" :icon-src="FolderPlusIcon"
+          <!-- <ActionButton outline v-if="'Admitted' !== patient.current_status" :icon-src="FolderPlusIcon"
             @click="showAdmitPatientPopup">Admit</ActionButton>
           <ActionButton outline v-if="'Admitted' === patient.current_status" :icon-src="FolderMinusIcon"
-            @click="showDischargePatientPopup">Discharge</ActionButton>
-          <ActionButton dark :icon-src="PhoneArrowUpRightIcon" @click="showAppointmentPopup">Initiate appt.</ActionButton>
-          <ActionButton dark v-on:click="() => $router.push({ name: 'patient-deliveries' })" :icon-src="UserGroupIcon">Deliveries
+            @click="showDischargePatientPopup">Discharge</ActionButton> -->
+          <!-- <ActionButton dark :icon-src="PhoneArrowUpRightIcon" @click="showAppointmentPopup">Initiate appt.</ActionButton> -->
+          <ActionButton outline v-on:click="() => $router.push({ name: 'patient-deliveries' })" :icon-src="UserGroupIcon">Deliveries
           </ActionButton>
-          <ActionButton dark v-on:click="() => $router.push({ name: 'patient-billings' })" :icon-src="BanknotesIcon">Billings
+          <ActionButton outline v-on:click="() => $router.push({ name: 'patient-billings' })" :icon-src="BanknotesIcon">Billings
           </ActionButton>
         </div>
       </div>
 
-      <div class="flex flex-col space-y-2 font-bold text-center" style="justify-content: end;">
+      <!-- <div class="flex flex-col space-y-2 font-bold text-center" style="justify-content: end;">
         <div class="flex items-center">
           <div class="border-[1px] border-gray-500 px-2 py-1 rounded ml-5 min-w-[150px]" :class="patient.current_appointment == 'Emergency' ?
             'bg-red-500 text-white border-red-500' :
@@ -89,7 +93,7 @@ onMounted(async () => { await fetchPatient() });
             {{ patient.current_status || 'Not admitted' }}
           </div>
         </div>
-      </div>
+      </div> -->
     </PageHeader>
     <HistoryIndex :key="displayKey" />
     <AdmitPatientPopup :popup-id="admitPatientPopupId" @update:closed="fetchPatient" />
